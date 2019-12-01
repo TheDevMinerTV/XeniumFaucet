@@ -2,6 +2,8 @@
 
 A simple to set up faucet for every coin forked from Turtlecoin.
 
+![Screenshot of the frontend](https://raw.githubusercontent.com/xenium-project/XeniumFaucet/master/pictures/home.jpg)
+
 ## Configuration
 
 Simply change the `config.js` file. The comments make it pretty self-explanatory.
