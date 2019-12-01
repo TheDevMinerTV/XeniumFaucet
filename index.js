@@ -178,7 +178,7 @@ app.post('/claimCoins', (req, res) => {
 				})
 				.then(() => transactionsDatabase.insert({
 					address: req.body.address,
-					amount: coinsToBeSent,
+					amount: coinsToBeSent / res.locals.decimalDivisor,
 					hash: txHash
 				}))
 				.catch((err) => {
