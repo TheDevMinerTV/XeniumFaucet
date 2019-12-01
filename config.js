@@ -33,23 +33,23 @@ module.exports = {
 			password: 'faucet',
 			daemon: {
 				host: '127.0.0.1',
-				port: 32779
+				port: 24888
 			}
 		},
 
 		// The server the wallet API is running on
 		host: '127.0.0.1',
-		port: 32780,
+		port: 8070,
 
 		// Password for the wallet API
 		password: 'faucet',
 
 		// Coin configuration
-		defaultUnlockTime: 35,
-		defaultMixin: 2,
-		decimalPlaces: 3,
-		decimalDivisor: 10 ** 3, // 10 to the power of decimalPlaces
-		defaultFee: 0.5
+		defaultUnlockTime: 60,
+		defaultMixin: 5,
+		decimalPlaces: 8,
+		decimalDivisor: 10 ** 8, // 10 to the power of decimalPlaces
+		defaultFee: 0.0000001
 	},
 
 	// Backend configuration
@@ -58,14 +58,14 @@ module.exports = {
 		port: 8909,
 
 		// The minimum amount of coins to be sent
-		minimumCoinsToBeSent: 1000,
+		minimumCoinsToBeSent: 15,
 
 		// The maximum amount of coins to be sent
-		maximumCoinsToBeSent: 25000,
+		maximumCoinsToBeSent: 1000,
 
 		// Address validation
 		walletAddressLength: 98,
-		walletAddressStartsWith: 'XNU',
+		walletAddressStartsWith: 'NaCa',
 
 		// Coins are claimable every this many seconds
 		claimableEvery: (24 * 60 * 60 * 1000), // 24 hours
@@ -74,8 +74,8 @@ module.exports = {
 	// Frontend configuration
 	frontend: {
 		// Coin configuration for the frontend
-		coinName: 'Xenium',
-		ticker: 'XNU',
+		coinName: 'NashCash',
+		ticker: 'NaCa',
 
 		// Coin claiming interval as a string
 		claimableEvery: '24 hours',
