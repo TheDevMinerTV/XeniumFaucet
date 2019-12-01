@@ -1,0 +1,25 @@
+extends ./template.pug
+
+block tabs
+	li.is-active
+		a.is-active(href="/") Faucet
+	li
+		a(href="/cooldowns") Cooldowns
+	li
+		a(href="/about") About
+
+block body
+	p You will recieve between #{locals.minCoins} #{locals.ticker} and #{locals.maxCoins} #{locals.ticker}!
+
+	br
+
+	div.notification.is-info
+		p Please note that this can vary depending on the balance of the faucet wallet.
+
+	form(action="/claimCoins", method="post")
+		input.input(type="text", name="address", placeholder=coinWalletDescription)
+
+		br
+		br
+
+		input.button.is-primary.is-rounded(type="submit", name="submit", value="Claim your coins!")

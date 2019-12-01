@@ -1,0 +1,22 @@
+extends ./template.pug
+
+block tabs
+	li.is-active
+		a(href="/") Faucet
+	li
+		a(href="/cooldowns") Cooldowns
+	li
+		a(href="/about") About
+
+block body
+	div.notification.is-danger
+		p.subtitle An error occurred!
+		p Please send a screenshot of the following message to 
+			code #{locals.faucetOwnerDiscord}
+			|  on Discord.
+
+		br
+
+		code #{error}
+
+	a.button.is-primary.is-rounded(href="/") Return

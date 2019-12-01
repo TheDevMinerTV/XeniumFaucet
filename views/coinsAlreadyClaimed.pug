@@ -1,0 +1,16 @@
+extends ./template.pug
+
+block tabs
+	li.is-active
+		a(href="/") Faucet
+	li
+		a(href="/cooldowns") Cooldowns
+	li
+		a(href="/about") About
+
+block body
+	div.notification.is-danger
+		p You seem to already have claimed your coins in the last #{locals.claimableEvery}!
+		p Remember, each address can only recieve one transaction from the faucet every #{locals.claimableEvery}.
+
+	a.button.is-primary.is-rounded(href="/") Return

@@ -1,0 +1,41 @@
+extends ./template.pug
+
+block tabs
+	li
+		a(href="/") Faucet
+	li
+		a(href="/cooldowns") Cooldowns
+	li.is-active
+		a(href="/about") About
+
+block body
+	article.tile.notification.is-info.is-child
+		p.title.has-text-centered.is-family-monospace XNUFaucet v#{locals.versionString}
+
+		p.subtitle.has-text-centered Developed by 
+			code TheDevMinerTV#9308
+			|  for Xenium.
+
+		p Written on the 30th of November 2019 in one day as a successor to the never released 
+			code XNUFaucet
+			|  written by me and Waterdev.
+
+		p Special thanks to 
+			li
+				a(href="https://github.com/UnrealValentin") Waterdev | Valentin
+
+		br
+
+		p Communication to the wallet using 
+			a(href="https://github.com/turtlecoin/turtlecoin-rpc-js") Turtlecoin-RPC,
+			|  routing using 
+			a(href="") Express,
+			|  rendering using 
+			a(href="") Pug
+			|  and as the database we are using 
+			a(href="") NeDB
+			| .
+
+		p For the frontend, we are using 
+			a(href="https://bulma.io") Bulma
+			|  for CSS/styling.

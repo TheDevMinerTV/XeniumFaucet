@@ -1,0 +1,42 @@
+extends ./template.pug
+
+block tabs
+	li
+		a(href="/") Faucet
+	li.is-active
+		a(href="/cooldowns") Cooldowns
+	li
+		a(href="/about") About
+
+block body
+	div.columns.is-mobile.is-centered
+		if cooldowns.length
+			div.is-3.column
+				h2.subtitle #{status.addressesKnown} address(es) known
+				h2.subtitle #{status.totalCoinsSent} #{locals.ticker} sent
+
+			div.column
+				table.table
+					thead
+						tr
+							th Address
+							th Cooldown runs out at
+
+					tbody
+						each cooldown, i in cooldowns
+							tr
+								td
+									code #{cooldown.address}
+								td #{cooldown.lastTime}
+
+			br
+
+		else
+			h2.subtitle There's nothing here...
+
+			br
+			br
+			br
+			br
+			br
+			br

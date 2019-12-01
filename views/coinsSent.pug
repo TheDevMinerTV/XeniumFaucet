@@ -1,0 +1,17 @@
+extends ./template.pug
+
+block tabs
+	li.is-active
+		a(href="/") Faucet
+	li
+		a(href="/cooldowns") Cooldowns
+	li
+		a(href="/about") About
+
+block body
+	div.notification.is-primary
+		p Your #{amount} #{locals.ticker} have been sent!
+		p Transaction hash:
+		code #{txHash}
+
+	a.button.is-primary.is-rounded(href="/") Return

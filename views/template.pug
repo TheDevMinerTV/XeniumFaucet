@@ -1,0 +1,55 @@
+doctype html
+
+html
+	head
+		title #{locals.coinName} Faucet v#{locals.versionString}
+		link(rel="stylesheet", href="https://cdn.jsdelivr.net/npm/bulma@0.8.0/css/bulma.min.css")
+		meta(name='viewport', content='width=device-width, initial-scale=1')
+
+	body
+		section.hero.is-primary.is-bold
+			div.hero-body
+				div.container
+					h1.title.is-family-monospace #{locals.coinName} Faucet v#{locals.versionString}
+					p.subtitle Run by #{locals.faucetOwner}
+
+		div.tabs.is-centered
+			ul
+				block tabs
+
+		br
+
+		div.container.is-fluid
+			block body
+
+		br
+		br
+
+	footer.footer
+		div.content.has-text-centered
+			p.subtitle Donate to the #{locals.coinName} faucet!
+			code #{locals.faucetAddress}
+
+			br
+			br
+
+			div.columns
+				div.column
+					p.is-size-7 Peers: #{status.peers}
+					p.is-size-7 Sync Status: #{status.walletBlocks}/#{status.networkBlocks} blocks
+					p.is-size-7 Network Hashrate: #{status.netHashrate} kH/s
+
+				div.column
+					p.is-size-7 Unlocked Balance: #{status.unlockedBalance} #{locals.ticker}
+					p.is-size-7 Locked Balance: #{status.lockedBalance} #{locals.ticker}
+					p.is-size-7 Total Balance: #{status.totalBalance} #{locals.ticker}
+
+				div.column
+					p.is-size-7 Addresses known: #{status.addressesKnown}
+					p.is-size-7 Total transactions sent: #{status.totalTransactionsSent}
+					p.is-size-7 Total #{locals.ticker} sent: #{status.totalCoinsSent} #{locals.ticker}
+
+			p Copyright 2019 
+				a(href="https://github.com/TheDevMinerTV") TheDevMinerTV
+				| , licensed under
+				a(href="https://www.gnu.org/licenses/gpl-3.0.html")  GPL-3.0

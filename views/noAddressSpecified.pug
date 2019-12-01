@@ -1,0 +1,16 @@
+extends ./template.pug
+
+block tabs
+	li.is-active
+		a(href="/") Faucet
+	li
+		a(href="/cooldowns") Cooldowns
+	li
+		a(href="/about") About
+
+block body
+	div.notification.is-danger
+		p.subtitle You have not specified a correct #{locals.coinName} wallet address.
+		p #{reason}
+
+	a.button.is-primary.is-rounded(href="/") Return

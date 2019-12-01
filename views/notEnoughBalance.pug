@@ -1,0 +1,16 @@
+extends ./template.pug
+
+block tabs
+	li.is-active
+		a(href="/") Faucet
+	li
+		a(href="/cooldowns") Cooldowns
+	li
+		a(href="/about") About
+
+block body
+	div.notification.is-danger
+		p.subtitle The faucet does not have enough balance.
+		p This would have sent #{wouldSendCoins} #{locals.ticker}.
+
+	a.button.is-primary.is-rounded(href="/") Return
