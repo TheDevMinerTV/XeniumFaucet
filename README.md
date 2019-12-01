@@ -1,8 +1,8 @@
-# XeniumFaucet
+# NashFaucet
 
 A simple to set up faucet for every coin forked from Turtlecoin.
 
-![Screenshot of the frontend](https://github.com/TheDevMinerTV/XeniumFaucet/blob/master/pictures/home.jpg?raw=true)
+![Screenshot of the frontend](https://github.com/Nash-Cash/NashFaucet/blob/master/pictures/home.jpg?raw=true)
 
 ## Configuration
 
@@ -19,6 +19,7 @@ Please see the included LICENSE file.
 
 ## Special thanks
 
+* [TheDevMinerTV](https://github.com/TheDevMinerTV)
 * [Waterdev | Valentin](https://github.com/UnrealValenting)
 
 ## Donate to the creator
