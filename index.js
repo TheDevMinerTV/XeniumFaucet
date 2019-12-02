@@ -56,6 +56,7 @@ app.use(require('body-parser').json())
 app.use(require('body-parser').urlencoded({
 	extended: true
 }))
+app.use('/src', require('express').static('src'))
 
 app.use((req, res, next) => {
 	res.locals = {
