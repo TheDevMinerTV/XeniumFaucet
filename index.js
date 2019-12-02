@@ -220,7 +220,7 @@ function getWalletStatus() {
 		.then((stats) => {
 			terminal
 				.green('|').yellow(` Hashrate         : ${(stats.hashrate / 1000).toFixed(2)} kH/s\n`)
-				.green('|').yellow(` Blocks           : ${stats.walletBlockCount}\n`)
+				.green('|').yellow(` Sync status      : ${stats.walletBlockCount}/${stats.networkBlockCount} (${(stats.walletBlockCount * 100 / stats.networkBlockCount).toFixed(2)}%)\n`)
 				.green('|').yellow(` Peers            : ${stats.peerCount}\n`)
 
 			status = {
