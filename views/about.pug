@@ -27,13 +27,9 @@ block body
 	article.tile.notification.is-info.is-child
 		p.title.has-text-centered.is-family-monospace XNUFaucet v#{locals.versionString}
 
-		p.subtitle.has-text-centered Developed by 
-			code TheDevMinerTV#9308
-			|  for Xenium.
+		p.subtitle.has-text-danger.has-text-centered Developed by TheDevMinerTV#9308 for Xenium.
 
-		p Written on the 30th of November 2019 in one day as a successor to the never released 
-			code XNUFaucet
-			|  written by me and Waterdev.
+		p Written on the 30th of November 2019 in one day as a successor to the never released XNUFaucet written by me and Waterdev.
 
 		p Special thanks to 
 			li
@@ -41,7 +37,7 @@ block body
 
 		br
 
-		p Communication to the wallet using 
+		p.is-size-6 Communication to the wallet using 
 			a(href="https://github.com/turtlecoin/turtlecoin-rpc-js") Turtlecoin-RPC,
 			|  routing using 
 			a(href="") Express,
@@ -51,6 +47,8 @@ block body
 			a(href="") NeDB
 			| .
 
-		p For the frontend, we are using 
+		p.is-size-6 For the frontend, we are using 
 			a(href="https://bulma.io") Bulma
-			|  for CSS/styling.
+			|  with the dark mode patch 
+			a(href="https://github.com") Bulma-Prefers-Dark
+			|  and some custom SASS for styling.
