@@ -64,6 +64,7 @@ app.use((req, res, next) => {
 		ticker: config.frontend.ticker,
 
 		faucetOwner: config.frontend.faucetOwner,
+		faucetOwnerDiscord: config.frontend.faucetOwnerDiscord,
 		minCoins: prettyAmounts(config.faucet.minimumCoinsToBeSent),
 		maxCoins: prettyAmounts(config.faucet.maximumCoinsToBeSent),
 		decimalDivisor: config.wallet.decimalDivisor,
