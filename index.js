@@ -140,24 +140,14 @@ app.post('/claimCoins', (req, res) => {
 				})
 			}
 
-			if (!doc) {
-				addressesDatabase.insert({
-					address: req.body.address,
-					lastTime: Date.now()
-				})
-			} else if (doc.lastTime > (Date.now() - config.faucet.claimableEvery)) {
+			if (doc && doc.lastTime > (Date.now() - config.faucet.claimableEvery)) {
+				console.log(`Address ${req.body.address} already claimed coins in the last ${config.faucet.claimableEvery} seconds.`)
+
 				return res.render('coinsAlreadyClaimed', {
 					locals: res.locals,
 					status: status
 				})
-			} else {
-				addressesDatabase.update({
-					_id: doc._id
-				}, {
-					lastTime: Date.now()
-				})
 			}
-
 
 			terminal.blue(`Sending ${prettyAmounts(coinsToBeSent / res.locals.decimalDivisor)} ${res.locals.ticker} to ${req.body.address}...`)
 
@@ -178,11 +168,30 @@ app.post('/claimCoins', (req, res) => {
 						txHash: txHash
 					})
 				})
-				.then(() => transactionsDatabase.insert({
-					address: req.body.address,
-					amount: coinsToBeSent / res.locals.decimalDivisor,
-					hash: txHash
-				}))
+				.then(() => {
+					transactionsDatabase.insert({
+						address: req.body.address,
+						amount: coinsToBeSent / res.locals.decimalDivisor,
+						hash: txHash
+					})
+
+					if (!doc) {
+						console.log(`Address ${req.body.address} not found in DB, inserting...`)
+
+						addressesDatabase.insert({
+							address: req.body.address,
+							lastTime: Date.now()
+						})
+					} else {
+						console.log(`Address ${req.body.address} found in DB, updating...`)
+
+						addressesDatabase.update({
+							address: req.body.address
+						}, {
+							lastTime: Date.now()
+						})
+					}
+				})
 				.catch((err) => {
 					console.log(err)
 
@@ -201,6 +210,8 @@ app.get('/cooldowns', (req, res) => {
 			const cooldowns = []
 
 			docs.forEach((doc) => {
+				if (!doc.address) return
+
 				cooldowns.push({
 					address: doc.address.substring(0, 50) + '...',
 					lastTime: new Date(doc.lastTime + config.faucet.claimableEvery).toUTCString()
