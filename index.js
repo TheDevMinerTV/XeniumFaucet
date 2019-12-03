@@ -282,7 +282,7 @@ function prettyAmounts(amount) {
 	let decimalPlaces = config.wallet.decimalPlaces
 
 	let i = parseInt(amount = Math.abs(Number(amount || 0)).toFixed(decimalPlaces)).toString(),
-			j = (i.length > 3) ? i.length % 3 : 0
+		j = (i.length > 3) ? i.length % 3 : 0
 
 	return (j ? i.substr(0, j) + ',' : '') + i.substr(j).replace(/(\d{3})(?=\d)/g, "$1,") + (decimalPlaces ? '.' + Math.abs(amount - i).toFixed(decimalPlaces).slice(2) : '')
 }
