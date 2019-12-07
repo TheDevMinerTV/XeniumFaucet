@@ -24,34 +24,30 @@ block tabs
 		a(href="/about") About
 
 block body
-	div.columns.is-mobile.is-centered
-		if cooldowns.length
-			div.is-3.column
-				h2.subtitle #{status.addressesKnown} address(es) known
-				h2.subtitle #{status.totalCoinsSent} #{locals.ticker} sent
+	nav.level.is-mobile
+		div.level-item.has-text-centered
+			div
+				p.heading Address(es) known
+				p.title #{status.addressesKnown}
+		div.level-item.has-text-centered
+			div
+				p.heading Total #{locals.ticker} sent
+				p.title #{status.totalCoinsSent}
 
-			div.column
-				table.table
-					thead
+	if cooldowns.length
+		.table-container.is-centered
+			table.table.is-fullwidth
+				thead
+					tr
+						th Address
+						th Runs out
+
+				tbody
+					each cooldown, i in cooldowns
 						tr
-							th Address
-							th Cooldown runs out at
+							td.is-family-code #{cooldown.address}
+							td #{cooldown.lastTime}
 
-					tbody
-						each cooldown, i in cooldowns
-							tr
-								td
-									code #{cooldown.address}
-								td #{cooldown.lastTime}
+	else
+		h2.subtitle There's nothing here...
 
-			br
-
-		else
-			h2.subtitle There's nothing here...
-
-			br
-			br
-			br
-			br
-			br
-			br

@@ -29,7 +29,7 @@ block body
 	br
 
 	div.notification.is-info
-		p Please note that this can vary depending on the balance of the faucet wallet.
+		p Please note that you can only claim coins every #{locals.claimableEvery}.
 
 	form(action="/claimCoins", method="post")
 		input.input(type="text", name="address", placeholder=coinWalletDescription)

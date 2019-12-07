@@ -18,7 +18,8 @@ doctype html
 html
 	head
 		title #{locals.coinName} Faucet v#{locals.versionString}
-		link(rel="stylesheet", href="https://cdn.jsdelivr.net/npm/bulma@0.8.0/css/bulma.min.css")
+		//-link(rel="stylesheet", href="https://cdn.jsdelivr.net/npm/bulma@0.8.0/css/bulma.min.css")
+		link(rel="stylesheet", href="/src/mystyles.css")
 		meta(name='viewport', content='width=device-width, initial-scale=1')
 
 	body
@@ -28,9 +29,11 @@ html
 					h1.title.is-family-monospace #{locals.coinName} Faucet v#{locals.versionString}
 					p.subtitle Run by #{locals.faucetOwner}
 
-		div.tabs.is-centered
-			ul
-				block tabs
+			div.hero-foot
+				nav.tabs.is-boxed.is-fullwidth
+					div.container
+						ul
+							block tabs
 
 		br
 
@@ -38,15 +41,16 @@ html
 			block body
 
 		br
-		br
 
 	footer.footer
 		div.content.has-text-centered
-			p.subtitle Donate to the #{locals.coinName} faucet!
-			code #{locals.faucetAddress}
+			p.subtitle Donate to this #{locals.coinName} faucet!
 
-			br
-			br
+			p.has-text-danger.is-hidden-mobile #{locals.faucetAddress}
+			br.is-hidden-mobile
+
+			div.notification.is-danger.is-hidden-tablet
+				p Please use a computer to donate!
 
 			div.columns
 				div.column
