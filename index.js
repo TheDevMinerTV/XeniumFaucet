@@ -17,6 +17,7 @@
 
 const { WalletAPI } = require('turtlecoin-rpc')
 const { terminal } = require('terminal-kit')
+const request = require('request-promise')
 const app = require('express')()
 
 const config = require('./config')
@@ -73,6 +74,9 @@ app.use((req, res, next) => {
 		faucetAddress: walletAddress,
 		status: status,
 
+		recaptchaEnabled: config.recaptcha.enabled,
+		recaptchaSiteKey: config.recaptcha.siteKey,
+
 		versionString: require('./package.json').version
 	}
 
@@ -122,9 +126,33 @@ app.post('/claimCoins', (req, res) => {
 		})
 	}
 
-	addressesDatabase.findOne({
-		address: req.body.address
-	})
+	new Promise(resolve => resolve())
+		.then(async () => {
+			if (config.recaptcha.enabled) {
+				terminal.grey(`Trying to authenticate address ${req.body.address} using reCaptcha... `)
+
+				let body = await request({
+					method: 'POST',
+					uri: 'https://www.google.com/recaptcha/api/siteverify',
+					qs: {
+						secret: config.recaptcha.secretKey,
+						response: req.body['g-recaptcha-response']
+					}
+				})
+
+				body = JSON.parse(body)
+
+				if (!body.success) {
+					terminal.red(`failed\n`)
+					throw new Error('Your Captcha is invalid. Please try again later. This might also mean that you are a bot.')
+				} else {
+					terminal.green(`success\n`)
+				}
+			}
+		})
+		.then(() => addressesDatabase.findOne({
+			address: req.body.address
+		}))
 		.then(async (doc) => {
 			let txHash
 
@@ -151,56 +179,58 @@ app.post('/claimCoins', (req, res) => {
 
 			terminal.blue(`Sending ${prettyAmounts(coinsToBeSent / res.locals.decimalDivisor)} ${res.locals.ticker} to ${req.body.address}...`)
 
-			wallet.sendAdvanced([
+			return wallet.sendAdvanced([
 				{
 					address: req.body.address,
 					amount: coinsToBeSent
 				}
 			])
-				.then((hash) => {
-					txHash = hash
-					terminal.blue(`Sent! Hash: ${txHash}\n`)
+		})
+		.then((hash) => {
+			txHash = hash
+			terminal.blue(`Sent! Hash: ${txHash}\n`)
 
-					res.render('coinsSent', {
-						locals: res.locals,
-						status: status,
-						amount: prettyAmounts(coinsToBeSent / res.locals.decimalDivisor),
-						txHash: txHash
-					})
+			res.render('coinsSent', {
+				locals: res.locals,
+				status: status,
+				amount: prettyAmounts(coinsToBeSent / res.locals.decimalDivisor),
+				txHash: txHash
+			})
+		})
+		.then(() => {
+			transactionsDatabase.insert({
+				address: req.body.address,
+				amount: coinsToBeSent / res.locals.decimalDivisor,
+				hash: txHash
+			})
+
+			if (!doc) {
+				console.log(`Address ${req.body.address} not found in DB, inserting...`)
+
+				addressesDatabase.insert({
+					address: req.body.address,
+					lastTime: Date.now()
 				})
-				.then(() => {
-					transactionsDatabase.insert({
-						address: req.body.address,
-						amount: coinsToBeSent / res.locals.decimalDivisor,
-						hash: txHash
-					})
+			} else {
+				console.log(`Address ${req.body.address} found in DB, updating...`)
 
-					if (!doc) {
-						console.log(`Address ${req.body.address} not found in DB, inserting...`)
-
-						addressesDatabase.insert({
-							address: req.body.address,
-							lastTime: Date.now()
-						})
-					} else {
-						console.log(`Address ${req.body.address} found in DB, updating...`)
-
-						addressesDatabase.update({
-							address: req.body.address
-						}, {
-							lastTime: Date.now()
-						})
-					}
+				addressesDatabase.update({
+					address: req.body.address
+				}, {
+					lastTime: Date.now()
 				})
-				.catch((err) => {
-					console.log(err)
+			}
+		})
+		.catch((err) => {
+			if (err.message === 'Your Captcha is invalid. Please try again later. This might also mean that you are a bot.') return
 
-					res.render('error', {
-						locals: res.locals,
-						status: status,
-						error: err
-					})
-				})
+			console.log(err)
+
+			res.render('error', {
+				locals: res.locals,
+				status: status,
+				error: err
+			})
 		})
 })
 

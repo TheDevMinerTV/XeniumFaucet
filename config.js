@@ -52,6 +52,16 @@ module.exports = {
 		defaultFee: 0.5
 	},
 
+	// Google reCaptcha v2 configuration
+	recaptcha: {
+		// Set to true if reCaptcha should be enabled
+		enabled: false,
+
+		// Credentials from reCaptcha's Admin Console
+		siteKey: 'YOUR SITEKEY',
+		secretKey: 'YOUR SECRETKEY'
+	},
+
 	// Backend configuration
 	faucet: {
 		// The port where the faucet should run on
