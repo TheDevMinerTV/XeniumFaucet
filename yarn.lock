@@ -754,10 +754,10 @@ ndarray@^1.0.13, ndarray@^1.0.19:
     iota-array "^1.0.0"
     is-buffer "^1.0.2"
 
-nedb-promises@^4.0.2:
-  version "4.0.2"
-  resolved "https://registry.yarnpkg.com/nedb-promises/-/nedb-promises-4.0.2.tgz#d3d1aceb82b0fecbdf5ece8da11b88f8ef35b28c"
-  integrity sha512-Wk5s7Nwvod1OdzvlDUjzWeSPZA+dvcigiw4IUwvH8TctbE+ycz3+8myy8iJ2x9+RrT2ELCiyCnzx962jsL0h0Q==
+nedb-promises@^4.0.3:
+  version "4.0.3"
+  resolved "https://registry.yarnpkg.com/nedb-promises/-/nedb-promises-4.0.3.tgz#136df5254f6c3052e97547fc0403a92492d8cc11"
+  integrity sha512-NzepLVjy/Vgl5lvlhO6nze2O4GsPUroONP97fRZKPlIbjt6dV7Y5CXMmPQBI6H3Q6whG8kubFOQXJkMAXIUF3w==
   dependencies:
     nedb "^1.8.0"
 
