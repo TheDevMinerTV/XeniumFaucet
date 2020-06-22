@@ -1061,10 +1061,10 @@ string-kit@^0.11.7:
   resolved "https://registry.yarnpkg.com/string-kit/-/string-kit-0.11.7.tgz#8adefeef6783b1472e7524d7df33e6139ba08246"
   integrity sha512-YELCRaRSTnwupnKqxqsm6xQ9EJjE23dpqg9ca6uBebfA2s601sm2dj42KPH7I50rvGf93Fz+o0mKKw81mK6Lrw==
 
-terminal-kit@^1.35.6:
-  version "1.35.6"
-  resolved "https://registry.yarnpkg.com/terminal-kit/-/terminal-kit-1.35.6.tgz#a24e7c0f5182704b54ab141b0550e7b84ebfcb04"
-  integrity sha512-qLWm4EJu7GC+TiODcdhydbmIBjku3L4cJHwqKhlaB0VkEeY2S8Co/9vSmbMT/d7dAnUWJAuLB9fTbnDYO0bmIw==
+terminal-kit@^1.35.7:
+  version "1.35.7"
+  resolved "https://registry.yarnpkg.com/terminal-kit/-/terminal-kit-1.35.7.tgz#490f1fec269646080657cb23688b99397ba4d95c"
+  integrity sha512-VrDIbdOb7eXjYoNd9UAm4Q2xKpQcbdi8DbQnCardR4EtcxbptonvVrnBrWKuQUKvV7IvfUgZhekT+kYzbQ3C+Q==
   dependencies:
     "@cronvel/get-pixels" "^3.3.1"
     chroma-js "^2.1.0"
