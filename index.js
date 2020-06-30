@@ -18,11 +18,12 @@
 const { WalletAPI } = require('turtlecoin-rpc')
 const { terminal } = require('terminal-kit')
 const request = require('request-promise')
-const express = require('express')
+const NeDB = require('nedb-promises')
+const Express = require('express')
 const config = require('./config')
 const Path = require('path')
 
-const app = express()
+const app = Express()
 
 const addressesDatabase = NeDB.create({
 		autoload: true,
@@ -72,7 +73,7 @@ app.use(
 		extended: true
 	})
 )
-app.use('/src', express.static('src'))
+app.use('/src', Express.static('src'))
 
 app.use((_req, res, next) => {
 	res.locals = {
