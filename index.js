@@ -16,6 +16,7 @@
 */
 
 const { WalletAPI } = require('turtlecoin-rpc')
+const PackageJSON = require('./package.json')
 const { terminal } = require('terminal-kit')
 const request = require('request-promise')
 const NeDB = require('nedb-promises')
@@ -37,7 +38,7 @@ const transactionsDatabase = NeDB.create({
 
 const wallet = new WalletAPI({
 	...config.wallet,
-	userAgent: `XeniumFaucet ${require('./package.json').version}`
+	userAgent: `XeniumFaucet ${PackageJSON.version}`
 })
 
 async function main() {
@@ -93,7 +94,7 @@ app.use((_req, res, next) => {
 		recaptchaEnabled: config.recaptcha.enabled,
 		recaptchaSiteKey: config.recaptcha.siteKey,
 
-		versionString: require('./package.json').version
+		versionString: PackageJSON.version
 	}
 
 	next()
