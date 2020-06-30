@@ -15,37 +15,24 @@
 
 extends ./template.pug
 
-block scripts
-	script(src='https://www.google.com/recaptcha/api.js', async, defer)
-
 block tabs
 	li.is-active
-		a.is-active(href="/") Faucet
+		a(href="/") Faucet
 	li
 		a(href="/cooldowns") Cooldowns
 	li
 		a(href="/about") About
 
 block body
-	p You will recieve between #{locals.minCoins} #{locals.ticker} and #{locals.maxCoins} #{locals.ticker}!
+	div.level.is-mobile
+		div.level-item.has-text-centered
+			div
+				p.heading Address(es) known
+				p.title #{status.addressesKnown}
+		div.level-item.has-text-centered
+			div
+				p.heading Total #{locals.ticker} sent
+				p.title #{status.totalCoinsSent}
 
-	br
-
-	div.notification.is-info
-		p Please note that you can only claim coins every #{locals.claimableEvery}.
-
-	form#claimForm(action="/claimCoins" method="post")
-		input.input(type="text" name="address", placeholder=coinWalletDescription)
-
-		br
-		br
-
-		if locals.recaptchaEnabled
-			button.button.is-primary.is-rounded.g-recaptcha(data-sitekey=locals.recaptchaSiteKey, data-callback="onSubmit") Claim your coins!
-		else
-			input.button.is-primary.is-rounded(type="submit" name="submit" value="Claim your coins!")
-
-	script.
-		function onSubmit() {
-			document.getElementById('claimForm').submit()
-		}
+	nav.tile.is-ancestor
+		p gay

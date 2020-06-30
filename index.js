@@ -22,14 +22,20 @@ const app = require('express')()
 
 const config = require('./config')
 
-const addressesDatabase = require('nedb-promises').create({ autoload: true, filename: config.databases.addresses }),
-	transactionsDatabase = require('nedb-promises').create({ autoload: true, filename: config.databases.transactions }),
+const addressesDatabase = require('nedb-promises').create({
+		autoload: true,
+		filename: config.databases.addresses
+	}),
+	transactionsDatabase = require('nedb-promises').create({
+		autoload: true,
+		filename: config.databases.transactions
+	}),
 	wallet = new WalletAPI({ ...config.wallet, userAgent: `XeniumFaucet ${require('./package.json').version}` })
 
 let walletAddress = '',
 	status = {}
 
-new Promise(resolve => resolve())
+new Promise((resolve) => resolve())
 	.then(() => {
 		if (config.wallet.openWallet) {
 			return wallet.open(
@@ -39,11 +45,11 @@ new Promise(resolve => resolve())
 				config.wallet.walletToOpen.daemon.port
 			)
 		} else {
-			return new Promise(resolve => resolve())
+			return new Promise((resolve) => resolve())
 		}
 	})
 	.then(() => wallet.primaryAddress())
-	.then((address) => walletAddress = address)
+	.then((address) => (walletAddress = address))
 	.then(() => terminal.blue(`Address: ${walletAddress}\n`))
 	.then(() => terminal.green(new Array(81).join('-') + '\n'))
 	.then(() => getWalletStatus())
@@ -54,9 +60,11 @@ app.set('views', __dirname + '/views')
 app.set('view engine', 'pug')
 
 app.use(require('body-parser').json())
-app.use(require('body-parser').urlencoded({
-	extended: true
-}))
+app.use(
+	require('body-parser').urlencoded({
+		extended: true
+	})
+)
 app.use('/src', require('express').static('src'))
 
 app.use((req, res, next) => {
@@ -83,16 +91,20 @@ app.use((req, res, next) => {
 	next()
 })
 
-app.get('/', (req, res) => res.render('index', {
-	locals: res.locals,
-	coinWalletDescription: `Your ${res.locals.coinName} Wallet Address`,
-	status: status
-}))
+app.get('/', (req, res) =>
+	res.render('index', {
+		locals: res.locals,
+		coinWalletDescription: `Your ${res.locals.coinName} Wallet Address`,
+		status: status
+	})
+)
 
-app.get('/about', (req, res) => res.render('about', {
-	locals: res.locals,
-	status: status
-}))
+app.get('/about', (req, res) =>
+	res.render('about', {
+		locals: res.locals,
+		status: status
+	})
+)
 
 app.post('/claimCoins', (req, res) => {
 	if (!req.body) {
@@ -122,11 +134,11 @@ app.post('/claimCoins', (req, res) => {
 		return res.render('noAddressSpecified', {
 			locals: res.locals,
 			status: status,
-			reason: 'The address you put in is the faucet\'s wallet address.'
+			reason: "The address you put in is the faucet's wallet address."
 		})
 	}
 
-	new Promise(resolve => resolve())
+	new Promise((resolve) => resolve())
 		.then(async () => {
 			if (config.recaptcha.enabled) {
 				terminal.grey(`Trying to authenticate address ${req.body.address} using reCaptcha... `)
@@ -144,21 +156,30 @@ app.post('/claimCoins', (req, res) => {
 
 				if (!body.success) {
 					terminal.red(`failed\n`)
-					throw new Error('Your Captcha is invalid. Please try again later. This might also mean that you are a bot.')
+					throw new Error(
+						'Your Captcha is invalid. Please try again later. This might also mean that you are a bot.'
+					)
 				} else {
 					terminal.green(`success\n`)
 				}
 			}
 		})
-		.then(() => addressesDatabase.findOne({
-			address: req.body.address
-		}))
+		.then(() =>
+			addressesDatabase.findOne({
+				address: req.body.address
+			})
+		)
 		.then(async (doc) => {
 			let txHash
 
 			const balance = await wallet.balance()
 
-			let coinsToBeSent = (Math.floor(Math.random() * (config.faucet.maximumCoinsToBeSent - config.faucet.minimumCoinsToBeSent)) + config.faucet.minimumCoinsToBeSent) * res.locals.decimalDivisor
+			let coinsToBeSent =
+				(Math.floor(
+					Math.random() * (config.faucet.maximumCoinsToBeSent - config.faucet.minimumCoinsToBeSent)
+				) +
+					config.faucet.minimumCoinsToBeSent) *
+				res.locals.decimalDivisor
 
 			if (balance.unlocked < config.faucet.minimumCoinsToBeSent) {
 				return res.render('notEnoughBalance', {
@@ -168,8 +189,10 @@ app.post('/claimCoins', (req, res) => {
 				})
 			}
 
-			if (doc && doc.lastTime > (Date.now() - config.faucet.claimableEvery)) {
-				console.log(`Address ${req.body.address} already claimed coins in the last ${config.faucet.claimableEvery} seconds.`)
+			if (doc && doc.lastTime > Date.now() - config.faucet.claimableEvery) {
+				console.log(
+					`Address ${req.body.address} already claimed coins in the last ${config.faucet.claimableEvery} seconds.`
+				)
 
 				return res.render('coinsAlreadyClaimed', {
 					locals: res.locals,
@@ -177,7 +200,11 @@ app.post('/claimCoins', (req, res) => {
 				})
 			}
 
-			terminal.blue(`Sending ${prettyAmounts(coinsToBeSent / res.locals.decimalDivisor)} ${res.locals.ticker} to ${req.body.address}...`)
+			terminal.blue(
+				`Sending ${prettyAmounts(coinsToBeSent / res.locals.decimalDivisor)} ${res.locals.ticker} to ${
+					req.body.address
+				}...`
+			)
 
 			return wallet.sendAdvanced([
 				{
@@ -214,15 +241,22 @@ app.post('/claimCoins', (req, res) => {
 			} else {
 				console.log(`Address ${req.body.address} found in DB, updating...`)
 
-				addressesDatabase.update({
-					address: req.body.address
-				}, {
-					lastTime: Date.now()
-				})
+				addressesDatabase.update(
+					{
+						address: req.body.address
+					},
+					{
+						lastTime: Date.now()
+					}
+				)
 			}
 		})
 		.catch((err) => {
-			if (err.message === 'Your Captcha is invalid. Please try again later. This might also mean that you are a bot.') return
+			if (
+				err.message ===
+				'Your Captcha is invalid. Please try again later. This might also mean that you are a bot.'
+			)
+				return
 
 			console.log(err)
 
@@ -235,36 +269,44 @@ app.post('/claimCoins', (req, res) => {
 })
 
 app.get('/cooldowns', (req, res) => {
-	addressesDatabase.find()
-		.then((docs) => {
-			const cooldowns = []
+	addressesDatabase.find().then((docs) => {
+		const cooldowns = []
 
-			docs.forEach((doc) => {
-				if (!doc.address) return
+		docs.forEach((doc) => {
+			if (!doc.address) return
 
-				cooldowns.push({
-					address: doc.address.substring(0, 50) + '...',
-					lastTime: new Date(doc.lastTime + config.faucet.claimableEvery).toUTCString()
-				})
-			})
-
-			res.render('cooldowns', {
-				locals: res.locals,
-				status: status,
-				cooldowns: cooldowns
+			cooldowns.push({
+				address: doc.address.substring(0, 50) + '...',
+				lastTime: new Date(doc.lastTime + config.faucet.claimableEvery).toUTCString()
 			})
 		})
+
+		res.render('cooldowns', {
+			locals: res.locals,
+			status: status,
+			cooldowns: cooldowns
+		})
+	})
 })
 
 app.listen(config.faucet.port, () => terminal.green(`Faucet listening on port ${config.faucet.port}\n`))
 
 function getWalletStatus() {
-	wallet.status()
+	wallet
+		.status()
 		.then((stats) => {
 			terminal
-				.green('|').yellow(` Hashrate         : ${(stats.hashrate / 1000).toFixed(2)} kH/s\n`)
-				.green('|').yellow(` Sync status      : ${stats.walletBlockCount}/${stats.networkBlockCount} (${(stats.walletBlockCount * 100 / stats.networkBlockCount).toFixed(2)}%)\n`)
-				.green('|').yellow(` Peers            : ${stats.peerCount}\n`)
+				.green('|')
+				.yellow(` Hashrate         : ${(stats.hashrate / 1000).toFixed(2)} kH/s\n`)
+				.green('|')
+				.yellow(
+					` Sync status      : ${stats.walletBlockCount}/${stats.networkBlockCount} (${(
+						(stats.walletBlockCount * 100) /
+						stats.networkBlockCount
+					).toFixed(2)}%)\n`
+				)
+				.green('|')
+				.yellow(` Peers            : ${stats.peerCount}\n`)
 
 			status = {
 				netHashrate: (stats.hashrate / 1000).toFixed(2),
@@ -276,9 +318,16 @@ function getWalletStatus() {
 		.then(() => wallet.balance())
 		.then((balance) => {
 			terminal
-				.green('|').yellow(` Total            : ${prettyAmounts(balance.unlocked + balance.locked)} ${config.frontend.ticker}\n`)
-				.green('|').yellow(` Unlocked         : ${prettyAmounts(balance.unlocked)} ${config.frontend.ticker}\n`)
-				.green('|').yellow(` Locked           : ${prettyAmounts(balance.locked)} ${config.frontend.ticker}\n`)
+				.green('|')
+				.yellow(
+					` Total            : ${prettyAmounts(balance.unlocked + balance.locked)} ${
+						config.frontend.ticker
+					}\n`
+				)
+				.green('|')
+				.yellow(` Unlocked         : ${prettyAmounts(balance.unlocked)} ${config.frontend.ticker}\n`)
+				.green('|')
+				.yellow(` Locked           : ${prettyAmounts(balance.locked)} ${config.frontend.ticker}\n`)
 
 			status.totalBalance = prettyAmounts(balance.unlocked + balance.locked)
 			status.unlockedBalance = prettyAmounts(balance.unlocked)
@@ -286,8 +335,7 @@ function getWalletStatus() {
 		})
 		.then(() => addressesDatabase.find())
 		.then((addresses) => {
-			terminal
-				.green('|').yellow(` Addresses known  : ${addresses.length}\n`)
+			terminal.green('|').yellow(` Addresses known  : ${addresses.length}\n`)
 
 			status.addressesKnown = addresses.length
 		})
@@ -295,11 +343,13 @@ function getWalletStatus() {
 		.then((txs) => {
 			let totalSent = 0
 
-			txs.forEach((tx) => totalSent += tx.amount)
+			txs.forEach((tx) => (totalSent += tx.amount))
 
 			terminal
-				.green('|').yellow(` Total Txs Sent   : ${txs.length}\n`)
-				.green('|').yellow(` Total Coins Sent : ${prettyAmounts(totalSent)} ${config.frontend.ticker}\n`)
+				.green('|')
+				.yellow(` Total Txs Sent   : ${txs.length}\n`)
+				.green('|')
+				.yellow(` Total Coins Sent : ${prettyAmounts(totalSent)} ${config.frontend.ticker}\n`)
 				.green(new Array(81).join('-') + '\n')
 
 			status.totalTransactionsSent = txs.length
@@ -311,8 +361,17 @@ function getWalletStatus() {
 function prettyAmounts(amount) {
 	let decimalPlaces = config.wallet.decimalPlaces
 
-	let i = parseInt(amount = Math.abs(Number(amount || 0)).toFixed(decimalPlaces)).toString(),
-		j = (i.length > 3) ? i.length % 3 : 0
+	let i = parseInt((amount = Math.abs(Number(amount || 0)).toFixed(decimalPlaces))).toString(),
+		j = i.length > 3 ? i.length % 3 : 0
 
-	return (j ? i.substr(0, j) + ',' : '') + i.substr(j).replace(/(\d{3})(?=\d)/g, "$1,") + (decimalPlaces ? '.' + Math.abs(amount - i).toFixed(decimalPlaces).slice(2) : '')
+	return (
+		(j ? i.substr(0, j) + ',' : '') +
+		i.substr(j).replace(/(\d{3})(?=\d)/g, '$1,') +
+		(decimalPlaces
+			? '.' +
+			  Math.abs(amount - i)
+					.toFixed(decimalPlaces)
+					.slice(2)
+			: '')
+	)
 }

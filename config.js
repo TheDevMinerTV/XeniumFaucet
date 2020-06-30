@@ -78,7 +78,7 @@ module.exports = {
 		walletAddressStartsWith: 'XNU',
 
 		// Coins are claimable every this many seconds
-		claimableEvery: (24 * 60 * 60 * 1000), // 24 hours
+		claimableEvery: 24 * 60 * 60 * 1000 // 24 hours
 	},
 
 	// Frontend configuration

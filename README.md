@@ -19,7 +19,7 @@ Please see the included LICENSE file.
 
 ## Special thanks
 
-* [Waterdev | Valentin](https://github.com/UnrealValenting)
+- [Waterdev | Valentin](https://github.com/UnrealValenting)
 
 ## Donate to the creator
 
