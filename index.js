@@ -23,18 +23,20 @@ const config = require('./config')
 
 const app = express()
 
-const addressesDatabase = require('nedb-promises').create({
+const addressesDatabase = NeDB.create({
 		autoload: true,
 		filename: config.databases.addresses
-	}),
-	transactionsDatabase = require('nedb-promises').create({
+})
+
+const transactionsDatabase = NeDB.create({
 		autoload: true,
 		filename: config.databases.transactions
-	}),
-	wallet = new WalletAPI({ ...config.wallet, userAgent: `XeniumFaucet ${require('./package.json').version}` })
+})
 
-let walletAddress = '',
-	status = {}
+const wallet = new WalletAPI({
+	...config.wallet,
+	userAgent: `XeniumFaucet ${require('./package.json').version}`
+})
 
 new Promise((resolve) => resolve())
 	.then(() => {
