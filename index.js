@@ -271,15 +271,19 @@ app.post('/claimCoins', (req, res) => {
 		})
 })
 
-app.get('/cooldowns', (_req, res) => {
-		const cooldowns = []
-
-		docs.forEach((doc) => {
-			if (!doc.address) return
-
-			cooldowns.push({
-				address: doc.address.substring(0, 50) + '...',
+app.get('/cooldowns', async (_req, res) => {
+	const docs = await addressesDatabase.find()
+	const cooldowns = docs
+		.filter((doc) => doc.address)
+		.map((doc) => ({
+			address: `${doc.address.substring(0, 50)}...`,
 				lastTime: new Date(doc.lastTime + config.faucet.claimableEvery).toUTCString()
+		}))
+
+	res.render('cooldowns', {
+		locals: res.locals,
+		status,
+		cooldowns
 			})
 		})
 
