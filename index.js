@@ -38,28 +38,29 @@ const wallet = new WalletAPI({
 	userAgent: `XeniumFaucet ${require('./package.json').version}`
 })
 
-new Promise((resolve) => resolve())
-	.then(() => {
+async function main() {
+	try {
 		if (config.wallet.openWallet) {
-			return wallet.open(
+			await wallet.open(
 				config.wallet.walletToOpen.filename,
 				config.wallet.walletToOpen.password,
 				config.wallet.walletToOpen.daemon.host,
 				config.wallet.walletToOpen.daemon.port
 			)
-		} else {
-			return new Promise((resolve) => resolve())
 		}
-	})
-	.then(() => wallet.primaryAddress())
-	.then((address) => (walletAddress = address))
-	.then(() => terminal.blue(`Address: ${walletAddress}\n`))
-	.then(() => terminal.green(new Array(81).join('-') + '\n'))
-	.then(() => getWalletStatus())
-	.then(() => setInterval(getWalletStatus, 10000))
-	.catch((e) => terminal.red(e.message + '\n'))
 
-app.set('views', __dirname + '/views')
+		walletAddress = await wallet.primaryAddress()
+
+		terminal.blue(`Address: ${walletAddress}\n`)
+		terminal.green(`${new Array(81).join('-')}\n`)
+
+		await getWalletStatus()
+
+		setInterval(getWalletStatus, 10000)
+	} catch (error) {
+		terminal.red(`${e.message}\n`)
+	}
+}
 app.set('view engine', 'pug')
 
 app.use(require('body-parser').json())
@@ -401,3 +402,5 @@ async function updateOrInsertAddress(address) {
 		)
 	}
 }
+
+main()
