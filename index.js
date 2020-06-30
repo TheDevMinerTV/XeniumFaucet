@@ -107,14 +107,14 @@ app.get('/', (_req, res) =>
 	res.render('index', {
 		locals: res.locals,
 		coinWalletDescription: `Your ${res.locals.coinName} Wallet Address`,
-		status: status
+		status
 	})
 )
 
 app.get('/about', (_req, res) =>
 	res.render('about', {
 		locals: res.locals,
-		status: status
+		status
 	})
 )
 
@@ -174,7 +174,7 @@ app.get('/about', (_req, res) =>
 			if (balance.unlocked < config.faucet.minimumCoinsToBeSent) {
 				return res.render('notEnoughBalance', {
 					locals: res.locals,
-					status: status,
+				status,
 					wouldSendCoins: prettyAmounts(coinsToBeSent / res.locals.decimalDivisor)
 				})
 			}
@@ -186,7 +186,7 @@ app.get('/about', (_req, res) =>
 
 				return res.render('coinsAlreadyClaimed', {
 					locals: res.locals,
-					status: status
+				status
 				})
 			}
 
@@ -209,9 +209,9 @@ app.get('/about', (_req, res) =>
 
 			res.render('coinsSent', {
 				locals: res.locals,
-				status: status,
+			status,
 				amount: prettyAmounts(coinsToBeSent / res.locals.decimalDivisor),
-				txHash: txHash
+			txHash
 			})
 		})
 		.then(() => {
@@ -252,7 +252,7 @@ app.get('/about', (_req, res) =>
 
 			res.render('error', {
 				locals: res.locals,
-				status: status,
+			status,
 				error: err
 			})
 		})
@@ -271,14 +271,6 @@ app.get('/cooldowns', async (_req, res) => {
 		locals: res.locals,
 		status,
 		cooldowns
-			})
-		})
-
-		res.render('cooldowns', {
-			locals: res.locals,
-			status: status,
-			cooldowns: cooldowns
-		})
 	})
 })
 
