@@ -293,10 +293,9 @@ app.get('/cooldowns', (_req, res) => {
 
 app.listen(config.faucet.port, () => terminal.green(`Faucet listening on port ${config.faucet.port}\n`))
 
-function getWalletStatus() {
-	wallet
-		.status()
-		.then((stats) => {
+async function getWalletStatus() {
+	try {
+		const stats = await wallet.status()
 			terminal
 				.green('|')
 				.yellow(` Hashrate         : ${(stats.hashrate / 1000).toFixed(2)} kH/s\n`)
@@ -316,15 +315,12 @@ function getWalletStatus() {
 				networkBlocks: stats.networkBlockCount,
 				peers: stats.peerCount
 			}
-		})
-		.then(() => wallet.balance())
-		.then((balance) => {
+
+		const balance = await wallet.balance()
 			terminal
 				.green('|')
 				.yellow(
-					` Total            : ${prettyAmounts(balance.unlocked + balance.locked)} ${
-						config.frontend.ticker
-					}\n`
+				` Total            : ${prettyAmounts(balance.unlocked + balance.locked)} ${config.frontend.ticker}\n`
 				)
 				.green('|')
 				.yellow(` Unlocked         : ${prettyAmounts(balance.unlocked)} ${config.frontend.ticker}\n`)
@@ -334,15 +330,14 @@ function getWalletStatus() {
 			status.totalBalance = prettyAmounts(balance.unlocked + balance.locked)
 			status.unlockedBalance = prettyAmounts(balance.unlocked)
 			status.lockedBalance = prettyAmounts(balance.locked)
-		})
-		.then(() => addressesDatabase.find())
-		.then((addresses) => {
+
+		const addresses = await addressesDatabase.find()
 			terminal.green('|').yellow(` Addresses known  : ${addresses.length}\n`)
 
 			status.addressesKnown = addresses.length
-		})
-		.then(() => transactionsDatabase.find())
-		.then((txs) => {
+
+		const txs = await transactionsDatabase.find()
+
 			let totalSent = 0
 
 			txs.forEach((tx) => (totalSent += tx.amount))
@@ -356,8 +351,9 @@ function getWalletStatus() {
 
 			status.totalTransactionsSent = txs.length
 			status.totalCoinsSent = prettyAmounts(totalSent)
-		})
-		.catch((e) => terminal.red(e.message + '\n'))
+	} catch (err) {
+		terminal.red(`An error occurred whilst updating the wallet status: ${err.message}\n`)
+	}
 }
 
 function prettyAmounts(amount) {
