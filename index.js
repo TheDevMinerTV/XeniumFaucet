@@ -41,6 +41,9 @@ const wallet = new WalletAPI({
 	userAgent: `XeniumFaucet ${PackageJSON.version}`
 })
 
+let walletAddress = ''
+let status = {}
+
 async function main() {
 	try {
 		if (config.wallet.openWallet) {
