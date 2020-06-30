@@ -67,7 +67,7 @@ app.use(
 )
 app.use('/src', require('express').static('src'))
 
-app.use((req, res, next) => {
+app.use((_req, res, next) => {
 	res.locals = {
 		coinName: config.frontend.coinName,
 		ticker: config.frontend.ticker,
@@ -91,7 +91,7 @@ app.use((req, res, next) => {
 	next()
 })
 
-app.get('/', (req, res) =>
+app.get('/', (_req, res) =>
 	res.render('index', {
 		locals: res.locals,
 		coinWalletDescription: `Your ${res.locals.coinName} Wallet Address`,
@@ -99,7 +99,7 @@ app.get('/', (req, res) =>
 	})
 )
 
-app.get('/about', (req, res) =>
+app.get('/about', (_req, res) =>
 	res.render('about', {
 		locals: res.locals,
 		status: status
@@ -268,8 +268,7 @@ app.post('/claimCoins', (req, res) => {
 		})
 })
 
-app.get('/cooldowns', (req, res) => {
-	addressesDatabase.find().then((docs) => {
+app.get('/cooldowns', (_req, res) => {
 		const cooldowns = []
 
 		docs.forEach((doc) => {
