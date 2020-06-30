@@ -109,35 +109,13 @@ app.get('/about', (_req, res) =>
 	})
 )
 
-app.post('/claimCoins', (req, res) => {
-	if (!req.body) {
+	const validationResult = validateClaimRequest(req)
+
+	if (!validationResult) {
 		return res.render('noAddressSpecified', {
 			locals: res.locals,
-			status: status
-		})
-	} else if (!req.body.address) {
-		return res.render('noAddressSpecified', {
-			locals: res.locals,
-			status: status,
-			reason: 'You have not put in a wallet address.'
-		})
-	} else if (req.body.address.length !== config.faucet.walletAddressLength) {
-		return res.render('noAddressSpecified', {
-			locals: res.locals,
-			status: status,
-			reason: `The address you put in is not ${config.faucet.walletAddressLength} characters long.`
-		})
-	} else if (!req.body.address.startsWith(config.faucet.walletAddressStartsWith)) {
-		return res.render('noAddressSpecified', {
-			locals: res.locals,
-			status: status,
-			reason: `The address you put in does not begin with ${config.faucet.walletAddressStartsWith}.`
-		})
-	} else if (req.body.address === walletAddress) {
-		return res.render('noAddressSpecified', {
-			locals: res.locals,
-			status: status,
-			reason: "The address you put in is the faucet's wallet address."
+			status,
+			reason: validationResult
 		})
 	}
 
@@ -376,4 +354,50 @@ function prettyAmounts(amount) {
 					.slice(2)
 			: '')
 	)
+}
+
+function validateClaimRequest(req) {
+	if (!req.body) {
+		return 'The body you sent is empty.'
+	}
+
+	if (!req.body.address) {
+		return 'You have not put in a wallet address.'
+	}
+
+	if (req.body.address.length !== config.faucet.walletAddressLength) {
+		return `The address you put in is not ${config.faucet.walletAddressLength} characters long.`
+	}
+
+	if (!req.body.address.startsWith(config.faucet.walletAddressStartsWith)) {
+		return `The address you put in does not begin with ${config.faucet.walletAddressStartsWith}.`
+	}
+
+	if (req.body.address === walletAddress) {
+		return "The address you put in is the faucet's wallet address."
+	}
+
+	return ''
+}
+
+async function updateOrInsertAddress(address) {
+	if (!doc) {
+		console.log(`Address ${address} not found in DB, inserting...`)
+
+		await addressesDatabase.insert({
+			address,
+			lastTime: Date.now()
+		})
+	} else {
+		console.log(`Address ${address} found in DB, updating...`)
+
+		await addressesDatabase.update(
+			{
+				address
+			},
+			{
+				lastTime: Date.now()
+			}
+		)
+	}
 }
