@@ -118,6 +118,7 @@ app.get('/about', (_req, res) =>
 	})
 )
 
+app.post('/claimCoins', async (req, res) => {
 	const validationResult = validateClaimRequest(req)
 
 	if (!validationResult) {
@@ -128,12 +129,11 @@ app.get('/about', (_req, res) =>
 		})
 	}
 
-	new Promise((resolve) => resolve())
-		.then(async () => {
+	try {
 			if (config.recaptcha.enabled) {
 				terminal.grey(`Trying to authenticate address ${req.body.address} using reCaptcha... `)
 
-				let body = await request({
+			let recaptchaResponse = await request({
 					method: 'POST',
 					uri: 'https://www.google.com/recaptcha/api/siteverify',
 					qs: {
@@ -142,10 +142,11 @@ app.get('/about', (_req, res) =>
 					}
 				})
 
-				body = JSON.parse(body)
+			recaptchaResponse = JSON.parse(recaptchaResponse)
 
-				if (!body.success) {
+			if (!recaptchaResponse.success) {
 					terminal.red(`failed\n`)
+
 					throw new Error(
 						'Your Captcha is invalid. Please try again later. This might also mean that you are a bot.'
 					)
@@ -153,21 +154,15 @@ app.get('/about', (_req, res) =>
 					terminal.green(`success\n`)
 				}
 			}
-		})
-		.then(() =>
-			addressesDatabase.findOne({
+
+		const doc = await addressesDatabase.findOne({
 				address: req.body.address
 			})
-		)
-		.then(async (doc) => {
-			let txHash
 
 			const balance = await wallet.balance()
 
 			let coinsToBeSent =
-				(Math.floor(
-					Math.random() * (config.faucet.maximumCoinsToBeSent - config.faucet.minimumCoinsToBeSent)
-				) +
+			(Math.floor(Math.random() * (config.faucet.maximumCoinsToBeSent - config.faucet.minimumCoinsToBeSent)) +
 					config.faucet.minimumCoinsToBeSent) *
 				res.locals.decimalDivisor
 
@@ -196,15 +191,13 @@ app.get('/about', (_req, res) =>
 				}...`
 			)
 
-			return wallet.sendAdvanced([
+		const txHash = await wallet.sendAdvanced([
 				{
 					address: req.body.address,
 					amount: coinsToBeSent
 				}
 			])
-		})
-		.then((hash) => {
-			txHash = hash
+
 			terminal.blue(`Sent! Hash: ${txHash}\n`)
 
 			res.render('coinsSent', {
@@ -213,40 +206,21 @@ app.get('/about', (_req, res) =>
 				amount: prettyAmounts(coinsToBeSent / res.locals.decimalDivisor),
 			txHash
 			})
-		})
-		.then(() => {
-			transactionsDatabase.insert({
+
+		await transactionsDatabase.insert({
 				address: req.body.address,
 				amount: coinsToBeSent / res.locals.decimalDivisor,
 				hash: txHash
 			})
 
-			if (!doc) {
-				console.log(`Address ${req.body.address} not found in DB, inserting...`)
-
-				addressesDatabase.insert({
-					address: req.body.address,
-					lastTime: Date.now()
-				})
-			} else {
-				console.log(`Address ${req.body.address} found in DB, updating...`)
-
-				addressesDatabase.update(
-					{
-						address: req.body.address
-					},
-					{
-						lastTime: Date.now()
-					}
-				)
-			}
-		})
-		.catch((err) => {
+		await updateOrInsertAddress(req.body.address)
+	} catch (err) {
 			if (
 				err.message ===
 				'Your Captcha is invalid. Please try again later. This might also mean that you are a bot.'
-			)
+		) {
 				return
+		}
 
 			console.log(err)
 
@@ -255,7 +229,7 @@ app.get('/about', (_req, res) =>
 			status,
 				error: err
 			})
-		})
+	}
 })
 
 app.get('/cooldowns', async (_req, res) => {
