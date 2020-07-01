@@ -27,13 +27,13 @@ const Path = require('path')
 const app = Express()
 
 const addressesDatabase = NeDB.create({
-		autoload: true,
-		filename: config.databases.addresses
+	autoload: true,
+	filename: config.databases.addresses
 })
 
 const transactionsDatabase = NeDB.create({
-		autoload: true,
-		filename: config.databases.transactions
+	autoload: true,
+	filename: config.databases.transactions
 })
 
 const wallet = new WalletAPI({
@@ -130,105 +130,105 @@ app.post('/claimCoins', async (req, res) => {
 	}
 
 	try {
-			if (config.recaptcha.enabled) {
-				terminal.grey(`Trying to authenticate address ${req.body.address} using reCaptcha... `)
+		if (config.recaptcha.enabled) {
+			terminal.grey(`Trying to authenticate address ${req.body.address} using reCaptcha... `)
 
 			let recaptchaResponse = await request({
-					method: 'POST',
-					uri: 'https://www.google.com/recaptcha/api/siteverify',
-					qs: {
-						secret: config.recaptcha.secretKey,
-						response: req.body['g-recaptcha-response']
-					}
-				})
+				method: 'POST',
+				uri: 'https://www.google.com/recaptcha/api/siteverify',
+				qs: {
+					secret: config.recaptcha.secretKey,
+					response: req.body['g-recaptcha-response']
+				}
+			})
 
 			recaptchaResponse = JSON.parse(recaptchaResponse)
 
 			if (!recaptchaResponse.success) {
-					terminal.red(`failed\n`)
+				terminal.red(`failed\n`)
 
-					throw new Error(
-						'Your Captcha is invalid. Please try again later. This might also mean that you are a bot.'
-					)
-				} else {
-					terminal.green(`success\n`)
-				}
+				throw new Error(
+					'Your Captcha is invalid. Please try again later. This might also mean that you are a bot.'
+				)
+			} else {
+				terminal.green(`success\n`)
 			}
+		}
 
 		const doc = await addressesDatabase.findOne({
-				address: req.body.address
-			})
+			address: req.body.address
+		})
 
-			const balance = await wallet.balance()
+		const balance = await wallet.balance()
 
-			let coinsToBeSent =
+		let coinsToBeSent =
 			(Math.floor(Math.random() * (config.faucet.maximumCoinsToBeSent - config.faucet.minimumCoinsToBeSent)) +
-					config.faucet.minimumCoinsToBeSent) *
-				res.locals.decimalDivisor
+				config.faucet.minimumCoinsToBeSent) *
+			res.locals.decimalDivisor
 
-			if (balance.unlocked < config.faucet.minimumCoinsToBeSent) {
-				return res.render('notEnoughBalance', {
-					locals: res.locals,
+		if (balance.unlocked < config.faucet.minimumCoinsToBeSent) {
+			return res.render('notEnoughBalance', {
+				locals: res.locals,
 				status,
-					wouldSendCoins: prettyAmounts(coinsToBeSent / res.locals.decimalDivisor)
-				})
-			}
+				wouldSendCoins: prettyAmounts(coinsToBeSent / res.locals.decimalDivisor)
+			})
+		}
 
-			if (doc && doc.lastTime > Date.now() - config.faucet.claimableEvery) {
-				console.log(
-					`Address ${req.body.address} already claimed coins in the last ${config.faucet.claimableEvery} seconds.`
-				)
-
-				return res.render('coinsAlreadyClaimed', {
-					locals: res.locals,
-				status
-				})
-			}
-
-			terminal.blue(
-				`Sending ${prettyAmounts(coinsToBeSent / res.locals.decimalDivisor)} ${res.locals.ticker} to ${
-					req.body.address
-				}...`
+		if (doc && doc.lastTime > Date.now() - config.faucet.claimableEvery) {
+			console.log(
+				`Address ${req.body.address} already claimed coins in the last ${config.faucet.claimableEvery} seconds.`
 			)
 
-		const txHash = await wallet.sendAdvanced([
-				{
-					address: req.body.address,
-					amount: coinsToBeSent
-				}
-			])
-
-			terminal.blue(`Sent! Hash: ${txHash}\n`)
-
-			res.render('coinsSent', {
+			return res.render('coinsAlreadyClaimed', {
 				locals: res.locals,
-			status,
-				amount: prettyAmounts(coinsToBeSent / res.locals.decimalDivisor),
-			txHash
+				status
 			})
+		}
+
+		terminal.blue(
+			`Sending ${prettyAmounts(coinsToBeSent / res.locals.decimalDivisor)} ${res.locals.ticker} to ${
+				req.body.address
+			}...`
+		)
+
+		const txHash = await wallet.sendAdvanced([
+			{
+				address: req.body.address,
+				amount: coinsToBeSent
+			}
+		])
+
+		terminal.blue(`Sent! Hash: ${txHash}\n`)
+
+		res.render('coinsSent', {
+			locals: res.locals,
+			status,
+			amount: prettyAmounts(coinsToBeSent / res.locals.decimalDivisor),
+			txHash
+		})
 
 		await transactionsDatabase.insert({
-				address: req.body.address,
-				amount: coinsToBeSent / res.locals.decimalDivisor,
-				hash: txHash
-			})
+			address: req.body.address,
+			amount: coinsToBeSent / res.locals.decimalDivisor,
+			hash: txHash
+		})
 
 		await updateOrInsertAddress(req.body.address)
 	} catch (err) {
-			if (
-				err.message ===
-				'Your Captcha is invalid. Please try again later. This might also mean that you are a bot.'
+		if (
+			err.message ===
+			'Your Captcha is invalid. Please try again later. This might also mean that you are a bot.'
 		) {
-				return
+			return
 		}
 
-			console.log(err)
+		console.log(err)
 
-			res.render('error', {
-				locals: res.locals,
+		res.render('error', {
+			locals: res.locals,
 			status,
-				error: err
-			})
+			error: err
+		})
 	}
 })
 
@@ -238,7 +238,7 @@ app.get('/cooldowns', async (_req, res) => {
 		.filter((doc) => doc.address)
 		.map((doc) => ({
 			address: `${doc.address.substring(0, 50)}...`,
-				lastTime: new Date(doc.lastTime + config.faucet.claimableEvery).toUTCString()
+			lastTime: new Date(doc.lastTime + config.faucet.claimableEvery).toUTCString()
 		}))
 
 	res.render('cooldowns', {
@@ -248,66 +248,78 @@ app.get('/cooldowns', async (_req, res) => {
 	})
 })
 
+app.get('/admin', async (req, res) => {
+	const addresses = await addressesDatabase.find()
+	const transactions = await transactionsDatabase.find()
+
+	res.render('admin', {
+		locals: res.locals,
+		status,
+		addresses,
+		transactions
+	})
+})
+
 app.listen(config.faucet.port, () => terminal.green(`Faucet listening on port ${config.faucet.port}\n`))
 
 async function getWalletStatus() {
 	try {
 		const stats = await wallet.status()
-			terminal
-				.green('|')
-				.yellow(` Hashrate         : ${(stats.hashrate / 1000).toFixed(2)} kH/s\n`)
-				.green('|')
-				.yellow(
-					` Sync status      : ${stats.walletBlockCount}/${stats.networkBlockCount} (${(
-						(stats.walletBlockCount * 100) /
-						stats.networkBlockCount
-					).toFixed(2)}%)\n`
-				)
-				.green('|')
-				.yellow(` Peers            : ${stats.peerCount}\n`)
+		terminal
+			.green('|')
+			.yellow(` Hashrate         : ${(stats.hashrate / 1000).toFixed(2)} kH/s\n`)
+			.green('|')
+			.yellow(
+				` Sync status      : ${stats.walletBlockCount}/${stats.networkBlockCount} (${(
+					(stats.walletBlockCount * 100) /
+					stats.networkBlockCount
+				).toFixed(2)}%)\n`
+			)
+			.green('|')
+			.yellow(` Peers            : ${stats.peerCount}\n`)
 
-			status = {
-				netHashrate: (stats.hashrate / 1000).toFixed(2),
-				walletBlocks: stats.walletBlockCount,
-				networkBlocks: stats.networkBlockCount,
-				peers: stats.peerCount
-			}
+		status = {
+			netHashrate: (stats.hashrate / 1000).toFixed(2),
+			walletBlocks: stats.walletBlockCount,
+			networkBlocks: stats.networkBlockCount,
+			peers: stats.peerCount
+		}
 
 		const balance = await wallet.balance()
-			terminal
-				.green('|')
-				.yellow(
+		terminal
+			.green('|')
+			.yellow(
 				` Total            : ${prettyAmounts(balance.unlocked + balance.locked)} ${config.frontend.ticker}\n`
-				)
-				.green('|')
-				.yellow(` Unlocked         : ${prettyAmounts(balance.unlocked)} ${config.frontend.ticker}\n`)
-				.green('|')
-				.yellow(` Locked           : ${prettyAmounts(balance.locked)} ${config.frontend.ticker}\n`)
+			)
+			.green('|')
+			.yellow(` Unlocked         : ${prettyAmounts(balance.unlocked)} ${config.frontend.ticker}\n`)
+			.green('|')
+			.yellow(` Locked           : ${prettyAmounts(balance.locked)} ${config.frontend.ticker}\n`)
 
-			status.totalBalance = prettyAmounts(balance.unlocked + balance.locked)
-			status.unlockedBalance = prettyAmounts(balance.unlocked)
-			status.lockedBalance = prettyAmounts(balance.locked)
+		status.totalBalance = prettyAmounts(balance.unlocked + balance.locked)
+		status.unlockedBalance = prettyAmounts(balance.unlocked)
+		status.lockedBalance = prettyAmounts(balance.locked)
 
 		const addresses = await addressesDatabase.find()
-			terminal.green('|').yellow(` Addresses known  : ${addresses.length}\n`)
+		terminal.green('|').yellow(` Addresses known  : ${addresses.length}\n`)
 
-			status.addressesKnown = addresses.length
+		status.addressesKnown = addresses.length
 
 		const txs = await transactionsDatabase.find()
 
-			let totalSent = 0
+		let totalSent = 0
 
-			txs.forEach((tx) => (totalSent += tx.amount))
+		txs.forEach((tx) => (totalSent += tx.amount))
 
-			terminal
-				.green('|')
-				.yellow(` Total Txs Sent   : ${txs.length}\n`)
-				.green('|')
-				.yellow(` Total Coins Sent : ${prettyAmounts(totalSent)} ${config.frontend.ticker}\n`)
-				.green(new Array(81).join('-') + '\n')
+		terminal
+			.green('|')
+			.yellow(` Total Txs Sent   : ${txs.length}\n`)
+			.green('|')
+			.yellow(` Total Coins Sent : ${prettyAmounts(totalSent)} ${config.frontend.ticker}\n`)
+			.green(new Array(81).join('-') + '\n')
 
-			status.totalTransactionsSent = txs.length
-			status.totalCoinsSent = prettyAmounts(totalSent)
+		status.totalTransactionsSent = txs.length
+		status.totalCoinsSent = prettyAmounts(totalSent)
 	} catch (err) {
 		terminal.red(`An error occurred whilst updating the wallet status: ${err.message}\n`)
 	}
@@ -316,8 +328,8 @@ async function getWalletStatus() {
 function prettyAmounts(amount) {
 	let decimalPlaces = config.wallet.decimalPlaces
 
-	let i = parseInt((amount = Math.abs(Number(amount || 0)).toFixed(decimalPlaces))).toString(),
-		j = i.length > 3 ? i.length % 3 : 0
+	let i = parseInt((amount = Math.abs(Number(amount || 0)).toFixed(decimalPlaces))).toString()
+	let j = i.length > 3 ? i.length % 3 : 0
 
 	return (
 		(j ? i.substr(0, j) + ',' : '') +
