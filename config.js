@@ -92,6 +92,6 @@ module.exports = {
 
 		// The person this faucet is run by, with Discord Tag
 		faucetOwner: 'TheDevMinerTV',
-		faucetOwnerDiscord: 'TheDevMinerTV (XNU)#9308'
+		faucetOwnerDiscord: 'TheDevMinerTV#4751'
 	}
 }
