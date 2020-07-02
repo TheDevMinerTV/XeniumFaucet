@@ -63,8 +63,10 @@ async function main() {
 		await getWalletStatus()
 
 		setInterval(getWalletStatus, 10000)
+
+		app.listen(config.faucet.port, () => terminal.green(`Faucet listening on port ${config.faucet.port}\n`))
 	} catch (error) {
-		terminal.red(`${e.message}\n`)
+		terminal.red(`${error.message}\n`)
 	}
 }
 
@@ -259,8 +261,6 @@ app.get('/admin', async (req, res) => {
 		transactions
 	})
 })
-
-app.listen(config.faucet.port, () => terminal.green(`Faucet listening on port ${config.faucet.port}\n`))
 
 async function getWalletStatus() {
 	try {
