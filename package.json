@@ -16,6 +16,6 @@
 		"pug": "^3.0.0",
 		"terminal-kit": "^1.36.0",
 		"turtlecoin-rpc": "^2.0.5",
-		"request-promise": "^4.2.5"
+		"request-promise": "^4.2.6"
 	}
 }
