@@ -1059,15 +1059,15 @@ stealthy-require@^1.1.1:
   resolved "https://registry.yarnpkg.com/stealthy-require/-/stealthy-require-1.1.1.tgz#35b09875b4ff49f26a777e509b3090a3226bf24b"
   integrity sha1-NbCYdbT/SfJqd35QmzCQoyJr8ks=
 
-string-kit@^0.11.7:
-  version "0.11.7"
-  resolved "https://registry.yarnpkg.com/string-kit/-/string-kit-0.11.7.tgz#8adefeef6783b1472e7524d7df33e6139ba08246"
-  integrity sha512-YELCRaRSTnwupnKqxqsm6xQ9EJjE23dpqg9ca6uBebfA2s601sm2dj42KPH7I50rvGf93Fz+o0mKKw81mK6Lrw==
+string-kit@^0.11.8:
+  version "0.11.8"
+  resolved "https://registry.yarnpkg.com/string-kit/-/string-kit-0.11.8.tgz#acdcd8c6f5c3ef839957f7d219097cb5d73c2c3f"
+  integrity sha512-lJyXXoptFpgOXL9cWZXtf45jxdbP5qYtaGZsmtFm4CZy9q6wwzvRzQcJiFeLx8I/0RpzBao9WCOGpbyfW2CMWA==
 
-terminal-kit@^1.36.0:
-  version "1.36.0"
-  resolved "https://registry.yarnpkg.com/terminal-kit/-/terminal-kit-1.36.0.tgz#bb2314abb14ee537f99b2851fa65b9e50fbea40f"
-  integrity sha512-RZqiGd9Ykh+CDcXuVWt3jwSr5WNjo9jKdIajWxdLS+PknnfwZebois0Qd5kY7H/d/mal1S51ILaNX3nBOM/xog==
+terminal-kit@^1.41.0:
+  version "1.41.0"
+  resolved "https://registry.yarnpkg.com/terminal-kit/-/terminal-kit-1.41.0.tgz#96c800ad094b2576db2ed94d894eb94efab7ddd8"
+  integrity sha512-BMP/2gyUCIRAB3Y07jX8fwQeSx5FKD3EAyoSHShbuudeov+nVOSd3/x6QEA3320iDZboQf/HWjqYgTdIxA1pKA==
   dependencies:
     "@cronvel/get-pixels" "^3.3.1"
     chroma-js "^2.1.0"
@@ -1075,7 +1075,7 @@ terminal-kit@^1.36.0:
     ndarray "^1.0.19"
     nextgen-events "^1.3.0"
     seventh "^0.7.35"
-    string-kit "^0.11.7"
+    string-kit "^0.11.8"
     tree-kit "^0.6.2"
 
 to-fast-properties@^2.0.0:
