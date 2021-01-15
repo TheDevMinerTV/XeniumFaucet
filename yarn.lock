@@ -687,10 +687,10 @@ negotiator@0.6.2:
   resolved "https://registry.yarnpkg.com/negotiator/-/negotiator-0.6.2.tgz#feacf7ccf525a77ae9634436a64883ffeca346fb"
   integrity sha512-hZXc7K2e+PgeI1eDBe/10Ard4ekbfrrqG8Ep+8Jmf4JID2bNg7NvCPOZN+kfF574pFQI7mum2AUqDidoKqcTOw==
 
-nextgen-events@^1.3.0:
-  version "1.3.0"
-  resolved "https://registry.yarnpkg.com/nextgen-events/-/nextgen-events-1.3.0.tgz#a32665d1ab6f026448b19d75c4603ec20292fa22"
-  integrity sha512-eBz5mrO4Hw2eenPVm0AVPHuAzg/RZetAWMI547RH8O9+a0UYhCysiZ3KoNWslnWNlHetb9kzowEshsKsmFo2YQ==
+nextgen-events@^1.3.4:
+  version "1.3.4"
+  resolved "https://registry.yarnpkg.com/nextgen-events/-/nextgen-events-1.3.4.tgz#4592242726e47da1ef7caaa414d6c5364ae66039"
+  integrity sha512-umMRD9VOvQ7+AeCvMETA7tekqrzG0xOX2HLrpyZRuW+4NlXR5baZwY/CP7Sq3x1BkKCIa1KnI1m2+Fs+fJpOiQ==
 
 node-bitmap@0.0.1:
   version "0.0.1"
@@ -1022,10 +1022,10 @@ setprototypeof@1.1.1:
   resolved "https://registry.yarnpkg.com/setprototypeof/-/setprototypeof-1.1.1.tgz#7e95acb24aa92f5885e0abef5ba131330d4ae683"
   integrity sha512-JvdAWfbXeIGaZ9cILp38HntZSFSo3mWg6xGcJJsd+d4aRMOqauag1C63dJfDw7OaMYwEbHMOxEZ1lqVRYP2OAw==
 
-seventh@^0.7.35:
-  version "0.7.35"
-  resolved "https://registry.yarnpkg.com/seventh/-/seventh-0.7.35.tgz#328603d3f31cc9475a2b0b7c66209ffb8a155ce3"
-  integrity sha512-8uGsybZk/XBSv7BvyjbSeK+R8vpWh2jkZJq0UIMVlJTr9CZsCLTfGWKtcBxmHzMUbzSPxa134prhvZA8GuIx/w==
+seventh@^0.7.40:
+  version "0.7.40"
+  resolved "https://registry.yarnpkg.com/seventh/-/seventh-0.7.40.tgz#a5a010496cb84421bb81f524840484a5aa473be9"
+  integrity sha512-7sxUydQx4iEh17uJUFjZDAwbffJirldZaNIJvVB/hk9mPEL3J4GpLGSL+mHFH2ydkye46DAsLGqzFJ+/Qj5foQ==
   dependencies:
     setimmediate "^1.0.5"
 
@@ -1066,23 +1066,23 @@ stealthy-require@^1.1.1:
   resolved "https://registry.yarnpkg.com/stealthy-require/-/stealthy-require-1.1.1.tgz#35b09875b4ff49f26a777e509b3090a3226bf24b"
   integrity sha1-NbCYdbT/SfJqd35QmzCQoyJr8ks=
 
-string-kit@^0.11.8:
-  version "0.11.8"
-  resolved "https://registry.yarnpkg.com/string-kit/-/string-kit-0.11.8.tgz#acdcd8c6f5c3ef839957f7d219097cb5d73c2c3f"
-  integrity sha512-lJyXXoptFpgOXL9cWZXtf45jxdbP5qYtaGZsmtFm4CZy9q6wwzvRzQcJiFeLx8I/0RpzBao9WCOGpbyfW2CMWA==
+string-kit@^0.11.9:
+  version "0.11.10"
+  resolved "https://registry.yarnpkg.com/string-kit/-/string-kit-0.11.10.tgz#1716b896a5077b2e3e856e409307d4f2e8999adc"
+  integrity sha512-ATVmIpMrqxPFNiNQTnmEeXzt3743O6DubJWh2MiAQV1ifKd4PcCjBcybCdb0ENnPO1T6asORK9nOpygn1BATag==
 
-terminal-kit@^1.44.0:
-  version "1.44.0"
-  resolved "https://registry.yarnpkg.com/terminal-kit/-/terminal-kit-1.44.0.tgz#6320a599318e64d90f9b96bf352df87e607f2938"
-  integrity sha512-f9RLSA1a1ahx/40NwQ1FoGWz/el7no9RiGX4wMUirmqxJZjwZ09pMZWFWzlHb1yIfk9SnfRD9esGfofu5fF35A==
+terminal-kit@^1.45.4:
+  version "1.45.4"
+  resolved "https://registry.yarnpkg.com/terminal-kit/-/terminal-kit-1.45.4.tgz#7f6f597870e58d14b2455acb8e2559a87a25ac95"
+  integrity sha512-3PUhzFPQhUVuc9i7GtlFgT4hVlc6RHqg5ahblF75He7Emu0841V6yd++Us4prrGXcQpzsWZ2/cPGK9CcQPgA4g==
   dependencies:
     "@cronvel/get-pixels" "^3.4.0"
     chroma-js "^2.1.0"
     lazyness "^1.2.0"
     ndarray "^1.0.19"
-    nextgen-events "^1.3.0"
-    seventh "^0.7.35"
-    string-kit "^0.11.8"
+    nextgen-events "^1.3.4"
+    seventh "^0.7.40"
+    string-kit "^0.11.9"
     tree-kit "^0.6.2"
 
 to-fast-properties@^2.0.0:
