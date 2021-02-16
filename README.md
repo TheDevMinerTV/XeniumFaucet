@@ -12,6 +12,8 @@ Simply change the `config.js` file. The comments make it pretty self-explanatory
 
 To run this faucet you have to have a WalletAPI and a daemon running.
 
+> ⚠ This project only works until Turtlecoin version v0.18.0. Anything after the big RPC rewrite **does not work**.
+
 ## Copyright
 
 This software is licensed under the GNU General Public License version 3.
@@ -19,7 +21,7 @@ Please see the included LICENSE file.
 
 ## Special thanks
 
-- [Waterdev | Valentin](https://github.com/UnrealValenting)
+- [Waterdev | Valentin](https://github.com/UnrealValentin)
 
 ## Donate to the creator
 
