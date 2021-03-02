@@ -14,7 +14,7 @@
 		"express": "^4.17.1",
 		"nedb-promises": "^4.1.1",
 		"pug": "^3.0.0",
-		"terminal-kit": "^1.47.0",
+		"terminal-kit": "^2.0.4",
 		"turtlecoin-rpc": "^2.0.5",
 		"request-promise": "^4.2.6"
 	}
