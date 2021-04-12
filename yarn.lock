@@ -664,10 +664,10 @@ ndarray@^1.0.13, ndarray@^1.0.19:
     iota-array "^1.0.0"
     is-buffer "^1.0.2"
 
-nedb-promises@^4.1.1:
-  version "4.1.1"
-  resolved "https://registry.yarnpkg.com/nedb-promises/-/nedb-promises-4.1.1.tgz#12440215a1b1e62ca6655ee2242bf72903fcb984"
-  integrity sha512-Y10f3r4FdcSy/6NlGnI2i9GxCf5KsPtYhlVEkXrKTqvFJ+ybJcoSBncgSm9G1W9QbtpecjJ6vYd7CGf54SNnbw==
+nedb-promises@^4.1.2:
+  version "4.1.2"
+  resolved "https://registry.yarnpkg.com/nedb-promises/-/nedb-promises-4.1.2.tgz#af165d078747e791e81182f11938d6ff019b351c"
+  integrity sha512-l4vcmIMinSzt6uI/q1G+E3+4yRB4+NN7+iA77p4VTjlQdl2qsqP+fYWeQSfKlqCRsz6711f9Nr2RKu7jlrUsQw==
   dependencies:
     nedb "^1.8.0"
 
