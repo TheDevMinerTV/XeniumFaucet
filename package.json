@@ -12,7 +12,7 @@
 	"dependencies": {
 		"body-parser": "^1.19.0",
 		"express": "^4.17.1",
-		"nedb-promises": "^4.1.1",
+		"nedb-promises": "^4.1.2",
 		"pug": "^3.0.2",
 		"terminal-kit": "^1.49.3",
 		"turtlecoin-rpc": "^2.0.5",
