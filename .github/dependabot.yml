@@ -1,0 +1,21 @@
+version: 2
+updates:
+- package-ecosystem: npm
+  directory: "/"
+  schedule:
+    interval: daily
+    time: "04:00"
+  open-pull-requests-limit: 10
+  ignore:
+  - dependency-name: terminal-kit
+    versions:
+    - ">= 2.a, < 3"
+  - dependency-name: turtlecoin-rpc
+    versions:
+    - "> 2.0.5"
+  - dependency-name: terminal-kit
+    versions:
+    - 1.45.9
+    - 1.46.1
+    - 1.48.0
+    - 1.49.2
