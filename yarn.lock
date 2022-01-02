@@ -643,10 +643,10 @@ ndarray@^1.0.13, ndarray@^1.0.19:
     iota-array "^1.0.0"
     is-buffer "^1.0.2"
 
-nedb-promises@^5.0.2:
-  version "5.0.2"
-  resolved "https://registry.yarnpkg.com/nedb-promises/-/nedb-promises-5.0.2.tgz#4998b0694c4fe0263d4580998c3426d3f38fb670"
-  integrity sha512-087g8JdsStXRWDxC9qqE4qMLqZGJrUnYF54pvOCDDfcLoptJUCqGb7j2WvWlaleeqft9rUjiJ9egvMJlUnJTmA==
+nedb-promises@^5.0.3:
+  version "5.0.3"
+  resolved "https://registry.yarnpkg.com/nedb-promises/-/nedb-promises-5.0.3.tgz#569af2860ff4c269f03582518a89827bdaf40bbe"
+  integrity sha512-hqQZi/T3dMJXQraFohVdatNX1uPDTGuVrqMiEnwA0dJxlC90xctOFG+jeUzPy9hYQGqCV+CpkSBkvUvTJdUApQ==
   dependencies:
     "@seald-io/nedb" "^2.2.0"
 
