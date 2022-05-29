@@ -24,6 +24,8 @@ const Express = require('express')
 const config = require('./config')
 const Path = require('path')
 
+const HASH_UNITS = ['H', 'KH', 'MH', 'GH', 'TH', 'PH'];
+
 const app = Express()
 
 const addressesDatabase = NeDB.create({
@@ -42,7 +44,17 @@ const wallet = new WalletAPI({
 })
 
 let walletAddress = ''
-let status = {}
+let status = {
+	netHashrate: '0 H/s',
+	walletBlocks: '0',
+	networkBlocks: '0',
+	peers: '0',
+	totalBalance: '0',
+	unlockedBalance: '0',
+	lockedBalance: '0',
+	totalTransactionsSent: '0',
+	totalCoinsSent: '0'
+}
 
 async function main() {
 	try {
@@ -258,12 +270,23 @@ app.get('/admin', async (req, res) => {
 	})
 })
 
+function getReadableHashRateString(hashrate, decimals = 2) {
+	let i = 0
+
+	while (hashrate > 1000) {
+		hashrate = hashrate / 1000
+		i++
+	}
+
+	return `${parseFloat(hashrate).toFixed(decimals)} ${HASH_UNITS[i]}/s`
+}
+
 async function getWalletStatus() {
 	try {
 		const stats = await wallet.status()
 		terminal
 			.green('|')
-			.yellow(` Hashrate         : ${(stats.hashrate / 1000).toFixed(2)} kH/s\n`)
+			.yellow(` Hashrate         : ${getReadableHashRateString(stats.hashrate, 2)}\n`)
 			.green('|')
 			.yellow(
 				` Sync status      : ${stats.walletBlockCount}/${stats.networkBlockCount} (${(
@@ -274,12 +297,6 @@ async function getWalletStatus() {
 			.green('|')
 			.yellow(` Peers            : ${stats.peerCount}\n`)
 
-		status = {
-			netHashrate: (stats.hashrate / 1000).toFixed(2),
-			walletBlocks: stats.walletBlockCount,
-			networkBlocks: stats.networkBlockCount,
-			peers: stats.peerCount
-		}
 
 		const balance = await wallet.balance()
 
@@ -293,14 +310,8 @@ async function getWalletStatus() {
 			.green('|')
 			.yellow(` Locked           : ${prettyAmounts(balance.locked)} ${config.frontend.ticker}\n`)
 
-		status.totalBalance = prettyAmounts(balance.unlocked + balance.locked)
-		status.unlockedBalance = prettyAmounts(balance.unlocked)
-		status.lockedBalance = prettyAmounts(balance.locked)
-
 		const addresses = await addressesDatabase.find()
 		terminal.green('|').yellow(` Addresses known  : ${addresses.length}\n`)
-
-		status.addressesKnown = addresses.length
 
 		const txs = await transactionsDatabase.find()
 
@@ -313,8 +324,18 @@ async function getWalletStatus() {
 			.yellow(` Total Coins Sent : ${prettyAmounts(totalSent)} ${config.frontend.ticker}\n`)
 			.green(new Array(81).join('-') + '\n')
 
-		status.totalTransactionsSent = txs.length
-		status.totalCoinsSent = prettyAmounts(totalSent)
+		status = {
+			netHashrate: getReadableHashRateString(stats.hashrate, 2),
+			walletBlocks: stats.walletBlockCount.toLocaleString('en-US'),
+			networkBlocks: stats.networkBlockCount.toLocaleString('en-US'),
+			peers: stats.peerCount.toLocaleString('en-US'),
+			totalBalance: prettyAmounts(balance.unlocked + balance.locked),
+			unlockedBalance: prettyAmounts(balance.unlocked),
+			lockedBalance: prettyAmounts(balance.locked),
+			addressesKnown: addresses.length.toLocaleString('en-US'),
+			totalTransactionsSent: txs.length.toLocaleString('en-US'),
+			totalCoinsSent: prettyAmounts(totalSent),
+		};
 	} catch (err) {
 		terminal.red(`An error occurred whilst updating the wallet status: ${err.message}\n`)
 	}
@@ -356,7 +377,7 @@ function validateClaimRequest(req) {
 	}
 
 	if (req.body.address === walletAddress) {
-		return "The address you put in is the faucet's wallet address."
+		return 'The address you put in is the faucet\'s wallet address.'
 	}
 
 	return ''
