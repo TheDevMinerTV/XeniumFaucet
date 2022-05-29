@@ -215,7 +215,7 @@ app.post('/claimCoins', async (req, res) => {
 			hash: txHash
 		})
 
-		await updateOrInsertAddress(req.body.address)
+		await updateOrInsertAddress(doc, req.body.address)
 	} catch (err) {
 		if (
 			err.message ===
@@ -332,8 +332,8 @@ function prettyAmounts(amount) {
 	let j = i.length > 3 ? i.length % 3 : 0
 
 	return (
-		(j ? i.substr(0, j) + ',' : '') +
-		i.substr(j).replace(/(\d{3})(?=\d)/g, '$1,') +
+		(j ? i.substring(0, j) + ',' : '') +
+		i.substring(j).replace(/(\d{3})(?=\d)/g, '$1,') +
 		(decimalPlaces
 			? '.' +
 			  Math.abs(amount - i)
@@ -367,7 +367,7 @@ function validateClaimRequest(req) {
 	return ''
 }
 
-async function updateOrInsertAddress(address) {
+async function updateOrInsertAddress(doc, address) {
 	if (!doc) {
 		console.log(`Address ${address} not found in DB, inserting...`)
 
@@ -375,18 +375,16 @@ async function updateOrInsertAddress(address) {
 			address,
 			lastTime: Date.now()
 		})
-	} else {
-		console.log(`Address ${address} found in DB, updating...`)
 
-		await addressesDatabase.update(
-			{
-				address
-			},
-			{
-				lastTime: Date.now()
-			}
-		)
+		return
 	}
+
+	console.log(`Address ${address} found in DB, updating...`)
+
+	await addressesDatabase.update(
+		{ address },
+		{ lastTime: Date.now() }
+	)
 }
 
 main()
