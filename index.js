@@ -162,14 +162,13 @@ app.post('/claimCoins', async (req, res) => {
 		})
 
 		const balance = await wallet.balance()
+		const atomicsToSend = generateRawCoinsToSend(config.faucet.minimumCoinsToBeSent, config.faucet.maximumCoinsToBeSent);
 
-		let rawCoinsToBeSent = generateRawCoinsToSend(config.faucet.minimumCoinsToBeSent, config.faucet.maximumCoinsToBeSent);
-
-		if (balance.unlocked < config.faucet.minimumCoinsToBeSent) {
+		if (balance.unlocked < config.faucet.minimumCoinsToBeSent / config.wallet.decimalDivisor) {
 			return res.render('notEnoughBalance', {
 				locals: res.locals,
 				status,
-				wouldSendCoins: prettyAmounts(rawCoinsToBeSent / res.locals.decimalDivisor)
+				wouldSendCoins: prettyAmounts(atomicsToSend / res.locals.decimalDivisor)
 			})
 		}
 
@@ -185,7 +184,7 @@ app.post('/claimCoins', async (req, res) => {
 		}
 
 		terminal.blue(
-			`Sending ${prettyAmounts(rawCoinsToBeSent / res.locals.decimalDivisor)} ${res.locals.ticker} to ${
+			`Sending ${prettyAmounts(atomicsToSend / res.locals.decimalDivisor)} ${res.locals.ticker} to ${
 				req.body.address
 			}...`
 		)
@@ -193,7 +192,7 @@ app.post('/claimCoins', async (req, res) => {
 		const txHash = await wallet.sendAdvanced([
 			{
 				address: req.body.address,
-				amount: rawCoinsToBeSent
+				amount: atomicsToSend
 			}
 		])
 
@@ -202,13 +201,13 @@ app.post('/claimCoins', async (req, res) => {
 		res.render('coinsSent', {
 			locals: res.locals,
 			status,
-			amount: prettyAmounts(rawCoinsToBeSent / res.locals.decimalDivisor),
+			amount: prettyAmounts(atomicsToSend / res.locals.decimalDivisor),
 			txHash
 		})
 
 		await transactionsDatabase.insert({
 			address: req.body.address,
-			amount: rawCoinsToBeSent / res.locals.decimalDivisor,
+			amount: atomicsToSend / res.locals.decimalDivisor,
 			hash: txHash
 		})
 
@@ -283,6 +282,7 @@ async function getWalletStatus() {
 		}
 
 		const balance = await wallet.balance()
+
 		terminal
 			.green('|')
 			.yellow(
