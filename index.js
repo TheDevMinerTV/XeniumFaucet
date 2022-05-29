@@ -123,7 +123,7 @@ app.get('/about', (_req, res) =>
 app.post('/claimCoins', async (req, res) => {
 	const validationResult = validateClaimRequest(req)
 
-	if (!validationResult) {
+	if (validationResult !== '') {
 		return res.render('noAddressSpecified', {
 			locals: res.locals,
 			status,
@@ -163,10 +163,7 @@ app.post('/claimCoins', async (req, res) => {
 
 		const balance = await wallet.balance()
 
-		let coinsToBeSent =
-			(Math.floor(Math.random() * (config.faucet.maximumCoinsToBeSent - config.faucet.minimumCoinsToBeSent)) +
-				config.faucet.minimumCoinsToBeSent) *
-			res.locals.decimalDivisor
+		let coinsToBeSent = generateCoinsToBeSent();
 
 		if (balance.unlocked < config.faucet.minimumCoinsToBeSent) {
 			return res.render('notEnoughBalance', {
@@ -387,4 +384,15 @@ async function updateOrInsertAddress(doc, address) {
 	)
 }
 
-main()
+function generateCoinsToBeSent() {
+	const randomCoins = Math.random();
+	const variance = config.faucet.maximumCoinsToBeSent - config.faucet.minimumCoinsToBeSent;
+
+	return (
+		(Math.floor(randomCoins * variance) +
+			config.faucet.minimumCoinsToBeSent) *
+		res.locals.decimalDivisor
+	);
+}
+
+main();
