@@ -88,8 +88,8 @@ app.use((_req, res, next) => {
 
 		faucetOwner: config.frontend.faucetOwner,
 		faucetOwnerDiscord: config.frontend.faucetOwnerDiscord,
-		minCoins: prettyAmounts(config.faucet.minimumCoinsToBeSent),
-		maxCoins: prettyAmounts(config.faucet.maximumCoinsToBeSent),
+		minCoins: prettyAmounts(config.faucet.minimumCoinsToBeSent / config.wallet.decimalDivisor),
+		maxCoins: prettyAmounts(config.faucet.maximumCoinsToBeSent / config.wallet.decimalDivisor),
 		decimalDivisor: config.wallet.decimalDivisor,
 		claimableEvery: config.frontend.claimableEvery,
 
@@ -323,7 +323,7 @@ async function getWalletStatus() {
 }
 
 function prettyAmounts(amount) {
-	let decimalPlaces = config.wallet.decimalPlaces
+	const { decimalPlaces } = config.wallet
 
 	let i = parseInt((amount = Math.abs(Number(amount || 0)).toFixed(decimalPlaces))).toString()
 	let j = i.length > 3 ? i.length % 3 : 0
