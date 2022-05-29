@@ -304,9 +304,7 @@ async function getWalletStatus() {
 
 		const txs = await transactionsDatabase.find()
 
-		let totalSent = 0
-
-		txs.forEach((tx) => (totalSent += tx.amount))
+		const totalSent = txs.reduce((acc, tx) => acc + tx.amount, 0)
 
 		terminal
 			.green('|')
