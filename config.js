@@ -67,10 +67,10 @@ module.exports = {
 		// The port where the faucet should run on
 		port: 8909,
 
-		// The minimum amount of coins to be sent
+		// The minimum amount of coins to be sent (in decimals)
 		minimumCoinsToBeSent: 1000,
 
-		// The maximum amount of coins to be sent
+		// The maximum amount of coins to be sent (in decimals)
 		maximumCoinsToBeSent: 25000,
 
 		// Address validation

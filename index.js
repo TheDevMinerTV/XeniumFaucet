@@ -163,13 +163,13 @@ app.post('/claimCoins', async (req, res) => {
 
 		const balance = await wallet.balance()
 
-		let coinsToBeSent = generateCoinsToBeSent();
+		let rawCoinsToBeSent = generateRawCoinsToSend(config.faucet.minimumCoinsToBeSent, config.faucet.maximumCoinsToBeSent);
 
 		if (balance.unlocked < config.faucet.minimumCoinsToBeSent) {
 			return res.render('notEnoughBalance', {
 				locals: res.locals,
 				status,
-				wouldSendCoins: prettyAmounts(coinsToBeSent / res.locals.decimalDivisor)
+				wouldSendCoins: prettyAmounts(rawCoinsToBeSent / res.locals.decimalDivisor)
 			})
 		}
 
@@ -185,7 +185,7 @@ app.post('/claimCoins', async (req, res) => {
 		}
 
 		terminal.blue(
-			`Sending ${prettyAmounts(coinsToBeSent / res.locals.decimalDivisor)} ${res.locals.ticker} to ${
+			`Sending ${prettyAmounts(rawCoinsToBeSent / res.locals.decimalDivisor)} ${res.locals.ticker} to ${
 				req.body.address
 			}...`
 		)
@@ -193,7 +193,7 @@ app.post('/claimCoins', async (req, res) => {
 		const txHash = await wallet.sendAdvanced([
 			{
 				address: req.body.address,
-				amount: coinsToBeSent
+				amount: rawCoinsToBeSent
 			}
 		])
 
@@ -202,13 +202,13 @@ app.post('/claimCoins', async (req, res) => {
 		res.render('coinsSent', {
 			locals: res.locals,
 			status,
-			amount: prettyAmounts(coinsToBeSent / res.locals.decimalDivisor),
+			amount: prettyAmounts(rawCoinsToBeSent / res.locals.decimalDivisor),
 			txHash
 		})
 
 		await transactionsDatabase.insert({
 			address: req.body.address,
-			amount: coinsToBeSent / res.locals.decimalDivisor,
+			amount: rawCoinsToBeSent / res.locals.decimalDivisor,
 			hash: txHash
 		})
 
@@ -384,15 +384,16 @@ async function updateOrInsertAddress(doc, address) {
 	)
 }
 
-function generateCoinsToBeSent() {
-	const randomCoins = Math.random();
-	const variance = config.faucet.maximumCoinsToBeSent - config.faucet.minimumCoinsToBeSent;
+/**
+ * @param {number} min Minimum amount in decimals
+ * @param {number} max Maximum amount in decimals
+ * @returns {number} Random amount in decimals
+ */
+function generateRawCoinsToSend(min, max) {
+	const variance = max - min;
+	const rawCoinsToSend = Math.random() * variance + min;
 
-	return (
-		(Math.floor(randomCoins * variance) +
-			config.faucet.minimumCoinsToBeSent) *
-		res.locals.decimalDivisor
-	);
+	return Math.floor(rawCoinsToSend);
 }
 
 main();
