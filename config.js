@@ -77,7 +77,7 @@ module.exports = {
 		walletAddressLength: 98,
 		walletAddressStartsWith: 'XNU',
 
-		// Coins are claimable every this many seconds
+		// Coins are claimable every this many milliseconds
 		claimableEvery: 24 * 60 * 60 * 1000 // 24 hours
 	},
 

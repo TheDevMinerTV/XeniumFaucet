@@ -184,7 +184,7 @@ app.post('/claimCoins', async (req, res) => {
 			})
 		}
 
-		if (doc && doc.lastTime > Date.now() - config.faucet.claimableEvery) {
+		if (doc && doc.lastTime + config.faucet.claimableEvery < Date.now()) {
 			console.log(
 				`Address ${req.body.address} already claimed coins in the last ${config.faucet.claimableEvery} seconds.`
 			)
