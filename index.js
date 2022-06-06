@@ -195,6 +195,8 @@ app.post('/claimCoins', async (req, res) => {
 			})
 		}
 
+		await updateOrInsertAddress(doc, req.body.address)
+
 		terminal.blue(
 			`Sending ${prettyAmounts(atomicsToSend / res.locals.decimalDivisor)} ${res.locals.ticker} to ${
 				req.body.address
@@ -222,8 +224,6 @@ app.post('/claimCoins', async (req, res) => {
 			amount: atomicsToSend / res.locals.decimalDivisor,
 			hash: txHash
 		})
-
-		await updateOrInsertAddress(doc, req.body.address)
 	} catch (err) {
 		if (
 			err.message ===
